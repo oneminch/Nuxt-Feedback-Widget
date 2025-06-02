@@ -34,7 +34,10 @@
     "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
   },
   "dependencies": {
-    "@nuxt/kit": "^3.16.2"
+    "@nuxt/kit": "^3.16.2",
+    "@tailwindcss/vite": "^4.1.8",
+    "resend": "^4.5.1",
+    "tailwindcss": "^4.1.8"
   },
   "devDependencies": {
     "@nuxt/devtools": "^2.4.0",
@@ -53,5 +56,5 @@
     "vitest": "^3.1.2",
     "vue-tsc": "^2.2.8"
   },
-  "packageManager": "pnpm@9.12.3+sha512.cce0f9de9c5a7c95bef944169cc5dfe8741abfb145078c0d508b868056848a87c81e626246cb60967cbd7fd29a6c062ef73ff840d96b3c86c40ac92cf4a813ee"
+  "packageManager": "pnpm@10.11.0"
 }

@@ -1,8 +1,11 @@
 <template>
   <div>
-    Nuxt module playground!
+    <header>Header</header>
+
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
+
+    <header>Footer</header>
   </div>
 </template>
-
-<script setup>
-</script>
