@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { useRoute } from "#app";
+import Button from "./ui/button/Button.vue";
 import { ref } from "vue";
 
 const route = useRoute();
@@ -106,7 +107,7 @@ const submitFeedback = async () => {
       placeholder="Optional Message..."
     />
 
-    <button>Submit</button>
+    <Button class="w-full">Submit</Button>
   </form>
 </template>
 
@@ -163,20 +164,5 @@ textarea {
   width: 100%;
   padding: 0.5rem;
   height: 5rem;
-}
-
-button {
-  background-color: #bada55;
-  color: #000;
-  border: none;
-  margin-top: 1rem;
-  border-radius: 0.25rem;
-  width: 100%;
-  padding: 0.25rem 1rem;
-  font-size: 1rem;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 </style>

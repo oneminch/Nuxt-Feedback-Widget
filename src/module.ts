@@ -4,6 +4,7 @@ import {
   createResolver,
   addComponent,
   addServerHandler,
+  installModule,
 } from "@nuxt/kit";
 
 export interface ModuleOptions {
@@ -29,9 +30,9 @@ export default defineNuxtModule<ModuleOptions>({
       resolver.resolve("./runtime/assets/css/tailwind.css"),
     );
 
-    // await installModule("shadcn-nuxt", {
-    //   componentDir: resolver.resolve("./runtime/components/ui"),
-    // });
+    await installModule("shadcn-nuxt", {
+      componentDir: resolver.resolve("./runtime/components/ui"),
+    });
 
     addComponent({
       name: "FeedbackWidget",

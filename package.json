@@ -36,8 +36,16 @@
   "dependencies": {
     "@nuxt/kit": "^3.16.2",
     "@tailwindcss/vite": "^4.1.8",
+    "@vueuse/core": "^13.3.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-vue-next": "^0.511.0",
+    "reka-ui": "^2.3.0",
     "resend": "^4.5.1",
-    "tailwindcss": "^4.1.8"
+    "shadcn-nuxt": "^2.2.0",
+    "tailwind-merge": "^3.3.0",
+    "tailwindcss": "^4.1.8",
+    "tw-animate-css": "^1.3.3"
   },
   "devDependencies": {
     "@nuxt/devtools": "^2.4.0",

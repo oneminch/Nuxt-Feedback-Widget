@@ -18,7 +18,8 @@ export default createConfigForNuxt({
   .append(
     {
       rules: {
-        "vue/html-self-closing": "off"
+        "vue/html-self-closing": "off",
+        "vue/multi-word-component-names": "off",
       }
     }
   )
