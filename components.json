@@ -11,10 +11,10 @@
   },
   "aliases": {
     "components": "@/src/runtime/components",
-    "composables": "../../composables",
-    "utils": "../../lib/utils",
+    "composables": "@/src/runtime/composables",
+    "utils": "@/src/runtime/lib/utils",
     "ui": "@/src/runtime/components/ui",
-    "lib": "../../lib"
+    "lib": "@/src/runtime/lib"
   },
   "iconLibrary": "lucide"
 }
