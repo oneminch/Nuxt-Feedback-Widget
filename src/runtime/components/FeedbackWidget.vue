@@ -10,6 +10,7 @@ import {
 import { Button } from "./ui/button";
 import { cn } from "../lib/utils";
 import FeedbackForm from "./FeedbackForm.vue";
+import { useFeedbackWidget } from "#imports";
 
 interface FeedbackUIProps {
   title?: string;
@@ -26,10 +27,12 @@ const uiProps = withDefaults(defineProps<FeedbackUIProps>(), {
   triggerClass: "",
   submitLabel: "Submit",
 });
+
+const { isOpen } = useFeedbackWidget();
 </script>
 
 <template>
-  <Dialog>
+  <Dialog v-model:open="isOpen">
     <DialogTrigger as-child>
       <Button
         :class="
