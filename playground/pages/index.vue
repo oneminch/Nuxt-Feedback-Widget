@@ -1,58 +1,31 @@
-<script setup lang="ts">
-import AppSidebar from "@/components/AppSidebar.vue";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Separator } from "@/components/ui/separator";
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar";
-</script>
-
-<script lang="ts">
-export const iframeHeight = "800px";
-export const description = "A sidebar with submenus.";
-</script>
-
 <template>
-  <SidebarProvider>
-    <AppSidebar />
-    <SidebarInset>
-      <header class="flex h-16 shrink-0 items-center gap-2 border-b">
-        <div class="flex items-center gap-2 px-3">
-          <SidebarTrigger />
-          <Separator orientation="vertical" class="mr-2 h-4" />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem class="hidden md:block">
-                <BreadcrumbLink href="#">
-                  Building Your Application
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator class="hidden md:block" />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
-      </header>
-      <div class="flex flex-1 flex-col gap-4 p-4">
-        <div class="grid auto-rows-min gap-4 md:grid-cols-3">
-          <div class="bg-muted/50 aspect-video rounded-xl" />
-          <div class="bg-muted/50 aspect-video rounded-xl" />
-          <div class="bg-muted/50 aspect-video rounded-xl" />
-        </div>
-        <div class="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min" />
+  <div class="absolute inset-0 flex items-center justify-center">
+    <div
+      class="w-2/3 h-4/5 grid grid-cols-5 gap-8 *:border-[0.5px] *:border-neutral-200 *:bg-neutral-50 *:p-10 *:rounded-2xl"
+    >
+      <div class="flex flex-col items-center justify-center gap-8 col-span-3">
+        <h2
+          class="text-3xl max-w-4/5 text-neutral-700 font-semibold text-center"
+        >
+          Help Us Improve By Sharing Your Feedback.
+        </h2>
+        <FeedbackWidget
+          title="Share Your Feedback"
+          description="What do you think?"
+          trigger-label="Share Feedback 😊"
+          trigger-class="bg-white hover:bg-neutral-50 text-neutral-800 border border-neutral-300 shadow-none"
+        />
       </div>
-      <FeedbackWidget />
-    </SidebarInset>
-  </SidebarProvider>
+      <div class="flex items-center justify-center relative col-span-2">
+        <h2
+          class="text-xl max-w-4/5 text-neutral-700 font-semibold text-center"
+        >
+          Help Us Improve By Sharing Your Feedback.
+        </h2>
+        <FeedbackWidget
+          trigger-class="absolute bottom-2 right-2 rounded-xl size-12 text-xl"
+        />
+      </div>
+    </div>
+  </div>
 </template>
