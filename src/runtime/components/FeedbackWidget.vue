@@ -1,45 +1,56 @@
 <script setup lang="ts">
-import { useState } from "#app";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
+import { Button } from "./ui/button";
+import { cn } from "../lib/utils";
 import FeedbackForm from "./FeedbackForm.vue";
 
-// defineOptions({
-//   name: "FeedbackWidget",
-// });
+interface FeedbackUIProps {
+  title?: string;
+  description?: string;
+  triggerLabel?: string;
+  triggerClass?: string;
+  submitLabel?: string;
+}
 
-// const handleClick = () => console.log("hello!");
-
-const widgetVisible = useState<boolean>("feedback-widget-visible");
+const uiProps = withDefaults(defineProps<FeedbackUIProps>(), {
+  title: "Feedback",
+  description: "Tell us what you think.",
+  triggerLabel: "😊",
+  triggerClass: "",
+  submitLabel: "Submit",
+});
 </script>
 
 <template>
-  <div
-    v-if="widgetVisible"
-    id="feedback-widget-overlay"
-    @click.self="widgetVisible = false"
-  >
-    <section id="feedback-widget">
-      <FeedbackForm />
-    </section>
-  </div>
+  <Dialog>
+    <DialogTrigger as-child>
+      <Button
+        :class="
+          cn(
+            'text-white inline-flex items-center justify-center',
+            uiProps.triggerClass,
+          )
+        "
+      >
+        {{ uiProps.triggerLabel }}
+      </Button>
+    </DialogTrigger>
+    <DialogContent class="sm:max-w-[425px]">
+      <DialogHeader>
+        <DialogTitle>{{ uiProps.title }}</DialogTitle>
+        <DialogDescription> {{ uiProps.description }} </DialogDescription>
+      </DialogHeader>
+
+      <section>
+        <FeedbackForm :submit-label="uiProps.submitLabel" />
+      </section>
+    </DialogContent>
+  </Dialog>
 </template>
-
-<style scoped>
-#feedback-widget-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-#feedback-widget {
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-</style>

@@ -1,9 +1,25 @@
 <script lang="ts" setup>
 import { useRoute } from "#app";
-import Button from "./ui/button/Button.vue";
 import { ref } from "vue";
+import { Button } from "./ui/button";
+import { Label } from "./ui/label";
+import { Textarea } from "./ui/textarea";
+import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
+import HappyFace from "./icons/HappyFace.vue";
+import SadFace from "./icons/SadFace.vue";
+import NeutralFace from "./icons/NeutralFace.vue";
+
+const formProps = defineProps<{
+  submitLabel?: string;
+}>();
 
 const route = useRoute();
+
+const feedbackOptions = [
+  { id: "sad", value: "sad", label: "Sad", icon: SadFace },
+  { id: "neutral", value: "neutral", label: "Neutral", icon: NeutralFace },
+  { id: "happy", value: "happy", label: "Happy", icon: HappyFace },
+];
 
 const feedbackOption = ref("");
 const feedbackMessage = ref("");
@@ -13,7 +29,7 @@ const resetErrorMessage = () => (validationErrorMessage.value = "");
 
 const submitFeedback = async () => {
   if (!feedbackOption.value) {
-    validationErrorMessage.value = "Please select a feedback option.";
+    validationErrorMessage.value = "Please select an option.";
     return;
   }
 
@@ -59,110 +75,46 @@ const submitFeedback = async () => {
 
 <template>
   <form @submit.prevent="submitFeedback" @change="resetErrorMessage">
-    <h3>Feedback</h3>
-    <div id="feedback-options">
-      <label for="sad">
-        <input
-          id="sad"
-          v-model="feedbackOption"
-          class="sr-only"
-          type="radio"
-          name="feedback-option"
-          value="Sad"
-        />
-        <span>😟</span>
-      </label>
-      <label for="neutral">
-        <input
-          id="neutral"
-          v-model="feedbackOption"
-          class="sr-only"
-          type="radio"
-          name="feedback-option"
-          value="Neutral"
-        />
-        <span>😐</span>
-      </label>
-      <label for="happy">
-        <input
-          id="happy"
-          v-model="feedbackOption"
-          class="sr-only"
-          type="radio"
-          name="feedback-option"
-          value="Happy"
-        />
-        <span>😃</span>
-      </label>
-    </div>
+    <RadioGroup
+      v-model="feedbackOption"
+      class="flex items-center justify-evenly gap-4 border border-primary-200 p-4 mb-1 rounded-md"
+      name="Feedback Option"
+    >
+      <RadioGroupItem
+        v-for="option in feedbackOptions"
+        :id="option.id"
+        :key="option.id"
+        :value="option.value"
+        :aria-label="option.label"
+      >
+        <span class="-z-0">
+          <component :is="option.icon" />
+        </span>
+      </RadioGroupItem>
+    </RadioGroup>
 
-    <p v-if="validationErrorMessage" id="validation-error-message">
+    <p
+      :class="[
+        'text-rose-500 text-xs mt-1 mb-4 h-4 transition-all duration-150 translate-y-0 opacity-100 visible',
+        { 'translate-y-0.25 opacity-0 invisible': !validationErrorMessage },
+      ]"
+    >
       {{ validationErrorMessage }}
     </p>
 
-    <textarea
-      id="message"
-      v-model="feedbackMessage"
-      name="message"
-      placeholder="Optional Message..."
-    />
+    <div class="mb-4">
+      <Label class="mb-2 text-base font-semibold" for="message"
+        >Message (Optional)</Label
+      >
+      <Textarea
+        id="message"
+        v-model="feedbackMessage"
+        class="h-24 resize-y max-h-48"
+        name="message"
+        placeholder="Optional Message..."
+      />
+    </div>
 
-    <Button class="w-full">Submit</Button>
+    <Button class="w-full">{{ formProps.submitLabel }}</Button>
   </form>
 </template>
-
-<style scoped>
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-#feedback-options {
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  gap: 1rem;
-  border: 1px solid #ddd;
-  padding: 0.5rem;
-  margin-bottom: 1rem;
-  border-radius: 0.25rem;
-}
-
-label > span {
-  font-size: 1.5rem;
-  display: inline-block;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 2rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  line-height: 2rem;
-}
-
-input[type="radio"]:checked ~ span {
-  background-color: #bada55;
-}
-
-#validation-error-message {
-  color: red;
-  font-size: 0.75rem;
-  margin-bottom: 1rem;
-}
-
-textarea {
-  box-sizing: border-box;
-  border: 1px solid #ddd;
-  border-radius: 0.25rem;
-  width: 100%;
-  padding: 0.5rem;
-  height: 5rem;
-}
-</style>
