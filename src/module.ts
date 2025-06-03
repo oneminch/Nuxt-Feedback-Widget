@@ -6,6 +6,7 @@ import {
   addServerHandler,
   addImportsDir,
 } from "@nuxt/kit";
+// import { defu } from "defu";
 
 export interface ModuleOptions {
   text?: string;
@@ -21,14 +22,14 @@ export default defineNuxtModule<ModuleOptions>({
     configKey: moduleConfigKey,
   },
   defaults: {},
-  async setup(_options, _nuxt) {
+  async setup(options, nuxt) {
     const resolver = createResolver(import.meta.url);
 
     await import("@tailwindcss/vite").then((r) => addVitePlugin(r.default));
 
     addImportsDir(resolver.resolve("./runtime/composables"));
 
-    _nuxt.options.css.push(
+    nuxt.options.css.push(
       resolver.resolve("./runtime/assets/css/tailwind.css"),
     );
 
@@ -37,17 +38,17 @@ export default defineNuxtModule<ModuleOptions>({
       filePath: resolver.resolve("./runtime/components/FeedbackWidget.vue"),
     });
 
-    if (_options.feedbackStrategy === "email") {
+    if (options.feedbackStrategy === "email") {
       addServerHandler({
         route: "/api/submit-feedback",
         handler: resolver.resolve("./runtime/server/api/feedback/email.post"),
       });
-    } else if (_options.feedbackStrategy === "github") {
+    } else if (options.feedbackStrategy === "github") {
       addServerHandler({
         route: "/api/submit-feedback",
         handler: resolver.resolve("./runtime/server/api/feedback/github.post"),
       });
-    } else if (_options.feedbackStrategy === "custom-endpoint") {
+    } else if (options.feedbackStrategy === "custom-endpoint") {
       addServerHandler({
         route: "/api/submit-feedback",
         handler: resolver.resolve("./runtime/server/api/feedback/custom.post"),
@@ -55,5 +56,16 @@ export default defineNuxtModule<ModuleOptions>({
     } else {
       console.log("Please pick a default strategy.");
     }
+
+    // const moduleRuntimeConfig = nuxt.options.runtimeConfig.public[
+    //   moduleConfigKey
+    // ] as Partial<ModuleOptions>;
+
+    // nuxt.options.runtimeConfig.public[moduleConfigKey] = defu(
+    //   moduleRuntimeConfig,
+    //   {
+    //     triggerPosition: options.triggerPosition!,
+    //   },
+    // );
   },
 });
