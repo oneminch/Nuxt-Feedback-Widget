@@ -1,11 +1,17 @@
+import tailwindcss from "@tailwindcss/vite";
+
 export default defineNuxtConfig({
-  modules: ["../src/module"],
+  modules: ["../src/module", "shadcn-nuxt"],
   feedbackWidget: {
     text: "Hi there!",
     feedbackStrategy: "github",
   },
   devtools: { enabled: true },
   compatibilityDate: "2025-05-19",
+  css: ["~/assets/css/tailwind.css"],
+  vite: {
+    plugins: [tailwindcss()],
+  },
   runtimeConfig: {
     resendApiKey: process.env.RESEND_API_KEY,
     resendFrom: process.env.RESEND_FROM_EMAIL,
