@@ -1,5 +1,13 @@
 <script setup lang="ts">
 const { openWidget } = useFeedbackWidget();
+
+const toggleColorMode = () => {
+  if (document.documentElement.classList.contains("dark")) {
+    document.documentElement.classList.remove("dark");
+  } else {
+    document.documentElement.classList.add("dark");
+  }
+};
 </script>
 
 <template>
@@ -10,6 +18,9 @@ const { openWidget } = useFeedbackWidget();
       <div
         class="flex flex-col items-center justify-center gap-8 md:col-span-3"
       >
+        <button class="absolute top-4 right-4" @click="toggleColorMode">
+          🌓
+        </button>
         <h2
           class="text-3xl max-w-4/5 text-neutral-700 font-semibold text-center"
         >

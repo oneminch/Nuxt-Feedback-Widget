@@ -3,8 +3,7 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineNuxtConfig({
   modules: ["../src/module"],
   feedbackWidget: {
-    text: "Hi there!",
-    feedbackStrategy: "github",
+    method: "github",
   },
   devtools: { enabled: true },
   compatibilityDate: "2025-05-19",
