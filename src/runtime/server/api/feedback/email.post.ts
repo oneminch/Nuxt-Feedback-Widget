@@ -1,4 +1,9 @@
-import { defineEventHandler, readBody, useRuntimeConfig } from "#imports";
+import {
+  createError,
+  defineEventHandler,
+  readBody,
+  useRuntimeConfig,
+} from "#imports";
 // import { Resend } from "resend";
 
 interface FeedbackObject {
@@ -23,7 +28,7 @@ const { resendApiKey, resendFrom, resendTo } = useRuntimeConfig();
 export default defineEventHandler(async (event) => {
   try {
     if (!resendApiKey.trim() || !resendFrom.trim() || !resendTo.trim()) {
-      throw new Error(
+      throw createError(
         "Please add the necessary secrets to your environment variables.",
       );
     }
@@ -33,7 +38,7 @@ export default defineEventHandler(async (event) => {
     const body = await readBody<FeedbackObject>(event);
 
     if (!body.option.trim()) {
-      throw new Error("Feedback Form Has a Missing Field: Feedback Option");
+      throw createError("Feedback Form Has a Missing Field: Feedback Option");
     }
 
     // const messageBody = JSON.stringify(body, null, 2);
@@ -46,7 +51,7 @@ export default defineEventHandler(async (event) => {
     // });
 
     // if (error) {
-    //   throw new Error("A Server Issue Has Occurred While Sending Email.");
+    //   throw createError("A Server Issue Has Occurred While Sending Email.");
     // }
 
     console.log("Feedback received:", body);

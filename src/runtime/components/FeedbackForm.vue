@@ -1,54 +1,71 @@
 <script lang="ts" setup>
-import { useRoute } from "#app";
-import { ref } from "vue";
+import { useRoute, ref, createError } from "#imports";
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import HappyFace from "./icons/HappyFace.vue";
 import SadFace from "./icons/SadFace.vue";
 import NeutralFace from "./icons/NeutralFace.vue";
+import type { FeedbackUIProps, FeedbackData } from "../../types";
+import { cn } from "../lib/utils";
 
-const formProps = defineProps<{
-  submitLabel?: string;
-}>();
+type FeedbackFormProps = Pick<
+  FeedbackUIProps,
+  "submitLabel" | "withTopics" | "topics"
+>;
+
+const formProps = defineProps<FeedbackFormProps>();
 
 const route = useRoute();
 
 const feedbackOptions = [
-  { id: "sad", value: "sad", label: "Sad", icon: SadFace },
-  { id: "neutral", value: "neutral", label: "Neutral", icon: NeutralFace },
-  { id: "happy", value: "happy", label: "Happy", icon: HappyFace },
+  { id: "unsatisfied", value: "Unsatisfied", label: "Sad", icon: SadFace },
+  { id: "neutral", value: "Neutral", label: "Neutral", icon: NeutralFace },
+  { id: "satisfied", value: "Satisfied", label: "Happy", icon: HappyFace },
 ];
 
+const feedbackTopic = ref("");
 const feedbackOption = ref("");
 const feedbackMessage = ref("");
 const validationErrorMessage = ref("");
+const submissionResponseMessage = ref("");
 
 const resetErrorMessage = () => (validationErrorMessage.value = "");
 
 const submitFeedback = async () => {
-  if (!feedbackOption.value) {
-    validationErrorMessage.value = "Please select an option.";
+  if (!feedbackOption.value.trim() || !feedbackTopic.value.trim()) {
+    validationErrorMessage.value = "Please select a topic and an option.";
     return;
   }
 
   const feedbackData = {
-    route: {
-      fullPath: route.fullPath,
-      hash: route.hash,
-      query: route.query,
-      name: route.name,
-      path: route.path,
-      redirectedFrom: route.redirectedFrom,
+    metadata: {
+      route: {
+        fullPath: route.fullPath,
+        hash: route.hash,
+        query: route.query,
+        name: route.name,
+        path: route.path,
+        redirectedFrom: route.redirectedFrom,
+      },
+      time: {
+        timestamp: new Date().toISOString(),
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      },
     },
-    time: {
-      timestamp: new Date().toISOString(),
-      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-    },
+    topic: feedbackTopic.value,
     option: feedbackOption.value,
     message: feedbackMessage.value,
-  };
+  } satisfies FeedbackData;
 
   try {
     const res = await fetch("/api/submit-feedback", {
@@ -59,22 +76,46 @@ const submitFeedback = async () => {
       body: JSON.stringify(feedbackData),
     });
 
-    if (!res.ok) {
-      throw new Error("Network response was not ok");
+    const resData = await res.json();
+
+    if (resData.error) {
+      const errMsg = `${resData.statusCode} (${resData.statusMessage}): ${resData.message}`;
+
+      throw createError(errMsg);
     }
 
-    console.log("Feedback submitted successfully:", res);
+    submissionResponseMessage.value = resData.message;
 
     feedbackOption.value = "";
     feedbackMessage.value = "";
+    feedbackTopic.value = "";
   } catch (error) {
-    console.error("Error submitting feedback:", error);
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
   }
 };
 </script>
 
 <template>
   <form @submit.prevent="submitFeedback" @change="resetErrorMessage">
+    <Select v-if="formProps.withTopics" v-model="feedbackTopic">
+      <SelectTrigger class="w-full mb-2.5">
+        <SelectValue placeholder="Select a topic" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectGroup>
+          <SelectItem
+            v-for="topic in formProps.topics"
+            :key="topic"
+            :value="topic"
+          >
+            {{ topic }}
+          </SelectItem>
+        </SelectGroup>
+      </SelectContent>
+    </Select>
+
     <RadioGroup
       v-model="feedbackOption"
       class="flex items-center justify-evenly gap-4 border border-primary-200 p-4 mb-1 rounded-md"
@@ -94,16 +135,23 @@ const submitFeedback = async () => {
     </RadioGroup>
 
     <p
-      :class="[
-        'text-rose-500 text-xs mt-1 mb-4 h-4 transition-all duration-150 translate-y-0 opacity-100 visible',
-        { 'translate-y-0.25 opacity-0 invisible': !validationErrorMessage },
-      ]"
+      :class="
+        cn(
+          'text-xs mt-1 mb-2.5 h-4 transition-all duration-150 translate-y-0.25 opacity-0 invisible',
+          {
+            'translate-y-0 opacity-100 visible':
+              validationErrorMessage || submissionResponseMessage,
+          },
+          { 'text-rose-500': validationErrorMessage },
+          { 'text-green-500': submissionResponseMessage },
+        )
+      "
     >
-      {{ validationErrorMessage }}
+      {{ validationErrorMessage || submissionResponseMessage }}
     </p>
 
-    <div class="mb-4">
-      <Label class="mb-2 text-base font-semibold" for="message"
+    <div class="mb-2.5">
+      <Label class="mb-1.5 text-base font-semibold" for="message"
         >Message (Optional)</Label
       >
       <Textarea

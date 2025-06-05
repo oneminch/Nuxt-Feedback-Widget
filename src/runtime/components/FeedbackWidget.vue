@@ -11,14 +11,7 @@ import { Button } from "./ui/button";
 import { cn } from "../lib/utils";
 import FeedbackForm from "./FeedbackForm.vue";
 import { useFeedbackWidget } from "#imports";
-
-interface FeedbackUIProps {
-  title?: string;
-  description?: string;
-  triggerLabel?: string;
-  triggerClass?: string;
-  submitLabel?: string;
-}
+import type { FeedbackUIProps } from "../../types";
 
 const uiProps = withDefaults(defineProps<FeedbackUIProps>(), {
   title: "Feedback",
@@ -26,6 +19,8 @@ const uiProps = withDefaults(defineProps<FeedbackUIProps>(), {
   triggerLabel: "😊",
   triggerClass: "",
   submitLabel: "Submit",
+  withTopics: true,
+  topics: () => ["General Feedback", "Bug Report", "Feature Request"],
 });
 
 const { isOpen } = useFeedbackWidget();
@@ -36,24 +31,23 @@ const { isOpen } = useFeedbackWidget();
     <DialogTrigger as-child>
       <Button
         :class="
-          cn(
-            'text-white inline-flex items-center justify-center',
-            uiProps.triggerClass,
-          )
+          cn('inline-flex items-center justify-center', uiProps.triggerClass)
         "
       >
         {{ uiProps.triggerLabel }}
       </Button>
     </DialogTrigger>
-    <DialogContent class="sm:max-w-[425px]">
+    <DialogContent class="sm:max-w-sm">
       <DialogHeader>
         <DialogTitle>{{ uiProps.title }}</DialogTitle>
         <DialogDescription> {{ uiProps.description }} </DialogDescription>
       </DialogHeader>
 
-      <section>
-        <FeedbackForm :submit-label="uiProps.submitLabel" />
-      </section>
+      <FeedbackForm
+        :submit-label="uiProps.submitLabel"
+        :with-topics="uiProps.withTopics"
+        :topics="uiProps.topics"
+      />
     </DialogContent>
   </Dialog>
 </template>

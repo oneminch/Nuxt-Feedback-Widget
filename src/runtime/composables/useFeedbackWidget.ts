@@ -1,6 +1,7 @@
 import { useState } from "#imports";
+import type { UseFeedbackWidget } from "../../types";
 
-const useFeedbackWidget = () => {
+const useFeedbackWidget = (): UseFeedbackWidget => {
   const isOpen = useState("feedback-widget-state", () => false);
 
   const closeWidget = () => (isOpen.value = false);
