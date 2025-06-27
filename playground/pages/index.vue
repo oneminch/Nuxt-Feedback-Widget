@@ -27,8 +27,6 @@ const toggleColorMode = () => {
           Help Us Improve By Sharing Your Feedback.
         </h2>
         <FeedbackWidget
-          title="Share Your Feedback"
-          description="What do you think?"
           trigger-label="Share Feedback 😊"
           trigger-class="bg-white hover:bg-neutral-50 text-neutral-800 border border-neutral-300 shadow-none"
         />
