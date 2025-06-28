@@ -10,8 +10,8 @@ import {
 import { Button } from "./ui/button";
 import { cn } from "../lib/utils";
 import FeedbackForm from "./FeedbackForm.vue";
-import { ref, useFeedbackWidget } from "#imports";
-import type { FeedbackUIProps } from "../../types";
+import { ref, useFeedbackWidget, watch } from "#imports";
+import type { FeedbackUIProps, SubmissionStatus } from "../../types";
 import FeedbackStatus from "./FeedbackStatus.vue";
 
 const uiProps = withDefaults(defineProps<FeedbackUIProps>(), {
@@ -28,7 +28,7 @@ const { isOpen } = useFeedbackWidget();
 
 const isFeedbackSubmitted = ref(false);
 const submissionStatus = ref({
-  status: "" as "success" | "failure",
+  status: "" as SubmissionStatus,
   message: "",
 });
 
@@ -36,6 +36,13 @@ const handlePostSubmit = (status: "success" | "failure", message: string) => {
   isFeedbackSubmitted.value = true;
   submissionStatus.value = { status, message };
 };
+
+watch(isOpen, (newValue) => {
+  if (!newValue) {
+    isFeedbackSubmitted.value = false;
+    submissionStatus.value = { status: "" as SubmissionStatus, message: "" };
+  }
+});
 </script>
 
 <template>
@@ -45,7 +52,6 @@ const handlePostSubmit = (status: "success" | "failure", message: string) => {
         :class="
           cn('inline-flex items-center justify-center', uiProps.triggerClass)
         "
-        @click="isFeedbackSubmitted = false"
       >
         {{ uiProps.triggerLabel }}
       </Button>

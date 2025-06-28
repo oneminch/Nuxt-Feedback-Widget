@@ -40,3 +40,5 @@ export interface UseFeedbackWidget {
   closeWidget: () => boolean;
   openWidget: () => boolean;
 }
+
+export type SubmissionStatus = "success" | "failure";

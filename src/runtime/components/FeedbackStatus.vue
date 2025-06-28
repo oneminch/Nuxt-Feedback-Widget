@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import SuccessIcon from "./icons/Success.vue";
 import FailureIcon from "./icons/Failure.vue";
+import type { SubmissionStatus } from "../../types";
 
 defineProps<{
-  status: "success" | "failure";
+  status: SubmissionStatus;
   message: string;
 }>();
 </script>
