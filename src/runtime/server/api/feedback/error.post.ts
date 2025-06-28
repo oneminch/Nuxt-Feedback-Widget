@@ -1,11 +1,12 @@
-import { createError, defineEventHandler } from "#imports";
+import { defineEventHandler } from "#imports";
+import { logger } from "../../../lib/utils";
 
 export default defineEventHandler(() => {
-  console.error("[Feedback Widget]: Please Provide a Default Feedback Method.");
+  logger.error("Missing email environment variables for feedback widget.");
 
-  throw createError({
-    statusCode: 500,
-    statusMessage: "Server Error",
-    message: "Submission Failed. Please Provide a Default Feedback Method.",
-  });
+  return {
+    error: true,
+    status: "failure",
+    message: "A server error occurred. Please try again later.",
+  };
 });
