@@ -7,12 +7,23 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "./ui/drawer";
 import { Button } from "./ui/button";
 import { cn } from "../lib/utils";
 import FeedbackForm from "./FeedbackForm.vue";
-import { ref, useFeedbackWidget, watch } from "#imports";
+import { computed, ref, useFeedbackWidget, watch } from "#imports";
 import type { FeedbackUIProps, SubmissionStatus } from "../../types";
 import FeedbackStatus from "./FeedbackStatus.vue";
+import { useMediaQuery } from "@vueuse/core";
 
 const uiProps = withDefaults(defineProps<FeedbackUIProps>(), {
   title: "Feedback",
@@ -25,7 +36,7 @@ const uiProps = withDefaults(defineProps<FeedbackUIProps>(), {
 });
 
 const { isOpen } = useFeedbackWidget();
-
+const isDesktop = useMediaQuery("(min-width: 640px)");
 const isFeedbackSubmitted = ref(false);
 const submissionStatus = ref({
   status: "" as SubmissionStatus,
@@ -37,7 +48,16 @@ const handlePostSubmit = (status: "success" | "failure", message: string) => {
   submissionStatus.value = { status, message };
 };
 
-watch(isOpen, (newValue) => {
+const Modal = computed(() => ({
+  Root: isDesktop.value ? Dialog : Drawer,
+  Trigger: isDesktop.value ? DialogTrigger : DrawerTrigger,
+  Content: isDesktop.value ? DialogContent : DrawerContent,
+  Header: isDesktop.value ? DialogHeader : DrawerHeader,
+  Title: isDesktop.value ? DialogTitle : DrawerTitle,
+  Description: isDesktop.value ? DialogDescription : DrawerDescription,
+}));
+
+watch(isOpen, (newValue: boolean) => {
   if (!newValue) {
     isFeedbackSubmitted.value = false;
     submissionStatus.value = { status: "" as SubmissionStatus, message: "" };
@@ -46,8 +66,8 @@ watch(isOpen, (newValue) => {
 </script>
 
 <template>
-  <Dialog v-model:open="isOpen">
-    <DialogTrigger as-child>
+  <component :is="Modal.Root" v-model:open="isOpen">
+    <component :is="Modal.Trigger" as-child>
       <Button
         :class="
           cn('inline-flex items-center justify-center', uiProps.triggerClass)
@@ -55,13 +75,18 @@ watch(isOpen, (newValue) => {
       >
         {{ uiProps.triggerLabel }}
       </Button>
-    </DialogTrigger>
-    <DialogContent class="sm:max-w-sm text-zinc-900 dark:text-zinc-50">
+    </component>
+    <component
+      :is="Modal.Content"
+      class="sm:max-w-sm px-2 *:px-4 text-zinc-900 dark:text-zinc-50"
+    >
       <template v-if="!isFeedbackSubmitted">
-        <DialogHeader>
-          <DialogTitle>{{ uiProps.title }}</DialogTitle>
-          <DialogDescription> {{ uiProps.description }} </DialogDescription>
-        </DialogHeader>
+        <component :is="Modal.Header">
+          <component :is="Modal.Title">{{ uiProps.title }}</component>
+          <component :is="Modal.Description">
+            {{ uiProps.description }}
+          </component>
+        </component>
 
         <FeedbackForm
           :submit-label="uiProps.submitLabel"
@@ -78,6 +103,12 @@ watch(isOpen, (newValue) => {
           :message="submissionStatus.message"
         />
       </template>
-    </DialogContent>
-  </Dialog>
+
+      <DrawerFooter v-if="!isDesktop" class="pt-2">
+        <DrawerClose as-child>
+          <Button variant="outline"> Close </Button>
+        </DrawerClose>
+      </DrawerFooter>
+    </component>
+  </component>
 </template>

@@ -160,7 +160,7 @@ const submitFeedback = async () => {
       {{ validationErrorMessage || submissionResponseMessage }}
     </p>
 
-    <div class="mb-2.5">
+    <div class="mb-5">
       <Label class="mb-1.5 text-base font-semibold" for="message"
         >Message (Optional)</Label
       >

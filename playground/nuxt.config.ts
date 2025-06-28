@@ -5,11 +5,13 @@ export default defineNuxtConfig({
   feedbackWidget: {
     method: "github",
   },
-  devtools: { enabled: true },
   compatibilityDate: "2025-05-19",
   css: ["~/assets/css/tailwind.css"],
   vite: {
     plugins: [tailwindcss()],
+    server: {
+      allowedHosts: [".trycloudflare.com"],
+    },
   },
   runtimeConfig: {
     resendApiKey: process.env.RESEND_API_KEY,
