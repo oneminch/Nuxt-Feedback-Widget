@@ -10,8 +10,9 @@ import {
 import { Button } from "./ui/button";
 import { cn } from "../lib/utils";
 import FeedbackForm from "./FeedbackForm.vue";
-import { useFeedbackWidget } from "#imports";
+import { ref, useFeedbackWidget } from "#imports";
 import type { FeedbackUIProps } from "../../types";
+import FeedbackStatus from "./FeedbackStatus.vue";
 
 const uiProps = withDefaults(defineProps<FeedbackUIProps>(), {
   title: "Feedback",
@@ -24,6 +25,17 @@ const uiProps = withDefaults(defineProps<FeedbackUIProps>(), {
 });
 
 const { isOpen } = useFeedbackWidget();
+
+const isFeedbackSubmitted = ref(false);
+const submissionStatus = ref({
+  status: "" as "success" | "failure",
+  message: "",
+});
+
+const handlePostSubmit = (status: "success" | "failure", message: string) => {
+  isFeedbackSubmitted.value = true;
+  submissionStatus.value = { status, message };
+};
 </script>
 
 <template>
@@ -33,21 +45,33 @@ const { isOpen } = useFeedbackWidget();
         :class="
           cn('inline-flex items-center justify-center', uiProps.triggerClass)
         "
+        @click="isFeedbackSubmitted = false"
       >
         {{ uiProps.triggerLabel }}
       </Button>
     </DialogTrigger>
-    <DialogContent class="sm:max-w-sm">
-      <DialogHeader>
-        <DialogTitle>{{ uiProps.title }}</DialogTitle>
-        <DialogDescription> {{ uiProps.description }} </DialogDescription>
-      </DialogHeader>
+    <DialogContent class="sm:max-w-sm text-zinc-900 dark:text-zinc-50">
+      <template v-if="!isFeedbackSubmitted">
+        <DialogHeader>
+          <DialogTitle>{{ uiProps.title }}</DialogTitle>
+          <DialogDescription> {{ uiProps.description }} </DialogDescription>
+        </DialogHeader>
 
-      <FeedbackForm
-        :submit-label="uiProps.submitLabel"
-        :with-topics="uiProps.withTopics"
-        :topics="uiProps.topics"
-      />
+        <FeedbackForm
+          :submit-label="uiProps.submitLabel"
+          :with-topics="uiProps.withTopics"
+          :topics="uiProps.topics"
+          @post-submit="handlePostSubmit"
+        />
+      </template>
+
+      <template v-else>
+        <FeedbackStatus
+          v-if="isFeedbackSubmitted"
+          :status="submissionStatus.status"
+          :message="submissionStatus.message"
+        />
+      </template>
     </DialogContent>
   </Dialog>
 </template>

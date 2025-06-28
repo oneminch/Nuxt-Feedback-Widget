@@ -24,6 +24,9 @@ type FeedbackFormProps = Pick<
 >;
 
 const formProps = defineProps<FeedbackFormProps>();
+const formEmits = defineEmits<{
+  (e: "postSubmit", status: "success" | "failure", message: string): void;
+}>();
 
 const route = useRoute();
 
@@ -89,10 +92,17 @@ const submitFeedback = async () => {
     feedbackOption.value = "";
     feedbackMessage.value = "";
     feedbackTopic.value = "";
+
+    formEmits("postSubmit", "success", resData.message);
   } catch (error) {
     if (error instanceof Error) {
       console.error(error.message);
     }
+    formEmits(
+      "postSubmit",
+      "failure",
+      error instanceof Error ? error.message : "Unknown error",
+    );
   }
 };
 </script>

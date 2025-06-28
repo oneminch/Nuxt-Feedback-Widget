@@ -9,6 +9,8 @@ export default defineEventHandler(async (event) => {
     const body = await readBody<FeedbackData>(event);
     console.log("Feedback submitted to github", body);
 
+    throw new Error("Feedback Submission Failed");
+
     return {
       status: 200,
       message: "Feedback Successfully Submitted",
