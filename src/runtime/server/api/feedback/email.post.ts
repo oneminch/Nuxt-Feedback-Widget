@@ -4,65 +4,80 @@ import {
   readBody,
   useRuntimeConfig,
 } from "#imports";
-// import { Resend } from "resend";
+import type { FeedbackData } from "../../../../types";
+import { generateFeedbackEmailHtml, logger } from "../../../lib/utils";
+import { Resend } from "resend";
 
-interface FeedbackObject {
-  route: {
-    fullPath: string;
-    hash: string;
-    query: string;
-    name: string;
-    path: string;
-    redirectedFrom: string;
-  };
-  time: {
-    timestamp: string;
-    timezone: string;
-  };
-  option: string;
-  message: string;
-}
-
-const { resendApiKey, resendFrom, resendTo } = useRuntimeConfig();
+const {
+  resendApiKey,
+  resendFrom,
+  resendTo,
+  public: {
+    // @ts-expect-error "Expected"
+    feedbackWidget: { siteName },
+  },
+} = useRuntimeConfig();
 
 export default defineEventHandler(async (event) => {
   try {
+    // Validate environment variables
     if (!resendApiKey.trim() || !resendFrom.trim() || !resendTo.trim()) {
-      throw createError(
-        "Please add the necessary secrets to your environment variables.",
-      );
+      logger.error("Missing email environment variables for feedback widget.");
+
+      throw createError({
+        statusCode: 500,
+        message:
+          "A server configuration error occurred. Please try again later.",
+      });
     }
 
-    // const resend = new Resend(resendApiKey);
-
-    const body = await readBody<FeedbackObject>(event);
+    // Read and validate request body
+    const body = await readBody<FeedbackData>(event);
 
     if (!body.option.trim()) {
-      throw createError("Feedback Form Has a Missing Field: Feedback Option");
+      throw createError({
+        statusCode: 400,
+        message: "Please select a feedback option.",
+      });
     }
 
-    // const messageBody = JSON.stringify(body, null, 2);
+    // Initialize Resend client
+    const resend = new Resend(resendApiKey);
 
-    // const { data, error } = await resend.emails.send({
-    //   from: `Your Nuxt Site <${resendFrom}>`,
-    //   to: resendTo,
-    //   subject: "New Feedback Submission (Your Nuxt Site)",
-    //   text: messageBody,
-    // });
+    // Generate and send email content
+    const messageBody = generateFeedbackEmailHtml(body, { showRawJson: true });
 
-    // if (error) {
-    //   throw createError("A Server Issue Has Occurred While Sending Email.");
-    // }
+    const { error } = await resend.emails.send({
+      from: `${siteName} <${resendFrom}>`,
+      to: resendTo,
+      subject: `New Feedback Submission (${siteName})`,
+      html: messageBody,
+    });
 
-    console.log("Feedback received:", body);
+    // Handle any errors from the Resend API
+    if (error) {
+      logger.error("Resend API error:", error);
 
-    // return {
-    //   status: "success",
-    //   message: "Thank you for your feedback!",
-    //   data,
-    // };
+      throw createError({
+        statusCode: 500,
+        message: "A server error occurred while submitting feedback.",
+      });
+    }
+
+    return {
+      status: "success",
+      message: "Thank you for your feedback!",
+    };
   } catch (error) {
-    // console.log(error);
-    return error;
+    logger.error("Feedback submission error:", error);
+
+    return {
+      error: true,
+      status: "failure",
+      message:
+        error instanceof Error
+          ? error.message
+          : "An unknown error occurred. Please try again later.",
+    };
   }
 });

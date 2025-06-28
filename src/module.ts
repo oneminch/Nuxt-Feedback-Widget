@@ -7,20 +7,19 @@ import {
   useLogger,
   addImports,
 } from "@nuxt/kit";
-// import { defu } from "defu";
+import { defu } from "defu";
 
 export interface ModuleOptions {
   method: "email" | "github" | "custom-endpoint";
+  siteName?: string;
 }
 
 export type * from "./types";
 
-const moduleConfigKey = "feedbackWidget";
-
 export default defineNuxtModule<ModuleOptions>({
   meta: {
     name: "nuxt-feedback-widget",
-    configKey: moduleConfigKey,
+    configKey: "feedbackWidget",
   },
   defaults: {},
   async setup(options, nuxt) {
@@ -70,15 +69,14 @@ export default defineNuxtModule<ModuleOptions>({
       });
     }
 
-    // const moduleRuntimeConfig = nuxt.options.runtimeConfig.public[
-    //   moduleConfigKey
-    // ] as Partial<ModuleOptions>;
+    const moduleRuntimeConfig = nuxt.options.runtimeConfig.public
+      .feedbackWidget as Partial<ModuleOptions>;
 
-    // nuxt.options.runtimeConfig.public[moduleConfigKey] = defu(
-    //   moduleRuntimeConfig,
-    //   {
-    //     triggerPosition: options.triggerPosition!,
-    //   },
-    // );
+    nuxt.options.runtimeConfig.public.feedbackWidget = defu(
+      moduleRuntimeConfig,
+      {
+        siteName: options.siteName || "Your Nuxt App",
+      },
+    );
   },
 });

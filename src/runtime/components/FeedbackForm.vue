@@ -82,9 +82,7 @@ const submitFeedback = async () => {
     const resData = await res.json();
 
     if (resData.error) {
-      const errMsg = `${resData.statusCode} (${resData.statusMessage}): ${resData.message}`;
-
-      throw createError(errMsg);
+      throw createError(resData.message);
     }
 
     submissionResponseMessage.value = resData.message;
@@ -95,9 +93,6 @@ const submitFeedback = async () => {
 
     formEmits("postSubmit", "success", resData.message);
   } catch (error) {
-    if (error instanceof Error) {
-      console.error(error.message);
-    }
     formEmits(
       "postSubmit",
       "failure",

@@ -3,14 +3,15 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineNuxtConfig({
   modules: ["../src/module"],
   feedbackWidget: {
-    method: "github",
+    method: "email",
+    siteName: "Playground",
   },
   compatibilityDate: "2025-05-19",
   css: ["~/assets/css/tailwind.css"],
   vite: {
     plugins: [tailwindcss()],
     server: {
-      allowedHosts: [".trycloudflare.com"],
+      // allowedHosts: [".trycloudflare.com"],
     },
   },
   runtimeConfig: {
