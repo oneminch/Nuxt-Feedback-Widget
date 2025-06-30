@@ -7,13 +7,10 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const logger = {
-  error: (...args: unknown[]) =>
-    console.error("[feedback-widget:email]", ...args),
-  info: (...args: unknown[]) =>
-    console.info("[feedback-widget:email]", ...args),
-  warn: (...args: unknown[]) =>
-    console.warn("[feedback-widget:email]", ...args),
-  log: (...args: unknown[]) => console.log("[feedback-widget:email]", ...args),
+  error: (...args: unknown[]) => console.error("[Feedback Widget]", ...args),
+  info: (...args: unknown[]) => console.info("[Feedback Widget]", ...args),
+  warn: (...args: unknown[]) => console.warn("[Feedback Widget]", ...args),
+  log: (...args: unknown[]) => console.log("[Feedback Widget]", ...args),
 };
 
 export function generateFeedbackEmailHtml(
