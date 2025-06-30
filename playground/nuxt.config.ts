@@ -3,7 +3,8 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineNuxtConfig({
   modules: ["../src/module"],
   feedbackWidget: {
-    method: "github",
+    method: "custom-endpoint",
+    customEndpoint: "/api/feedback/custom-feedback",
     siteName: "Playground",
   },
   compatibilityDate: "2025-05-19",
