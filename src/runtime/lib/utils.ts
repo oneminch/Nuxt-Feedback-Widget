@@ -71,3 +71,45 @@ export function generateFeedbackEmailHtml(
     </div>
   `;
 }
+
+export function generateFeedbackGitHubIssueMarkdown(
+  data: FeedbackData,
+): string {
+  const { topic, option, message, metadata } = data;
+  const { route, time } = metadata;
+
+  const rawJson = JSON.stringify(data, null, 2);
+
+  return `
+## New Feedback Received
+
+| Field              | Value |
+| ------------------ | ----- |
+| **Topic**          | ${topic || "N/A"} |
+| **Option**         | ${option} |
+| **Message**        | ${message ? message.replace(/\n/g, "<br>") : "N/A"} |
+| **Timestamp**      | ${time.timestamp} (${time.timezone}) |
+
+### Metadata: Route Information
+
+| Property           | Value |
+| ------------------ | ----- |
+| **Path**           | ${route.path} |
+| **Full Path**      | ${route.fullPath} |
+| **Name**           | ${route.name?.toString() ?? "N/A"} |
+| **Hash**           | ${route.hash || "N/A"} |
+| **Redirected From**| ${route.redirectedFrom ? `\`${JSON.stringify(route.redirectedFrom)}\`` : "N/A"} |
+| **Query**          | \`${JSON.stringify(route.query)}\` |
+
+---
+
+<details>
+<summary><strong>Show Raw JSON</strong></summary>
+
+\`\`\`json
+${rawJson}
+\`\`\`
+
+</details>
+  `.trim();
+}
