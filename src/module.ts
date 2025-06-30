@@ -12,6 +12,7 @@ import { defu } from "defu";
 export interface ModuleOptions {
   method: "email" | "github" | "custom-endpoint";
   siteName?: string;
+  customEndpoint?: string;
 }
 
 export type * from "./types";
@@ -76,6 +77,7 @@ export default defineNuxtModule<ModuleOptions>({
       moduleRuntimeConfig,
       {
         siteName: options.siteName || "Your Nuxt App",
+        customEndpoint: options.customEndpoint,
       },
     );
   },
