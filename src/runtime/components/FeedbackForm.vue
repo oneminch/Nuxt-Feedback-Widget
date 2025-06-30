@@ -45,7 +45,10 @@ const submissionResponseMessage = ref("");
 const resetErrorMessage = () => (validationErrorMessage.value = "");
 
 const submitFeedback = async () => {
-  if (!feedbackOption.value.trim() || !feedbackTopic.value.trim()) {
+  if (
+    !feedbackOption.value.trim() ||
+    (formProps.withTopics && !feedbackTopic.value.trim())
+  ) {
     validationErrorMessage.value = "Please select a topic and an option.";
     return;
   }
@@ -104,17 +107,13 @@ const submitFeedback = async () => {
 
 <template>
   <form @submit.prevent="submitFeedback" @change="resetErrorMessage">
-    <Select v-if="formProps.withTopics" v-model="feedbackTopic">
+    <Select v-if="withTopics" v-model="feedbackTopic">
       <SelectTrigger class="w-full mb-2.5">
         <SelectValue placeholder="Select a topic" />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          <SelectItem
-            v-for="topic in formProps.topics"
-            :key="topic"
-            :value="topic"
-          >
+          <SelectItem v-for="topic in topics" :key="topic" :value="topic">
             {{ topic }}
           </SelectItem>
         </SelectGroup>
@@ -168,6 +167,6 @@ const submitFeedback = async () => {
       />
     </div>
 
-    <Button class="w-full">{{ formProps.submitLabel }}</Button>
+    <Button class="w-full">{{ submitLabel }}</Button>
   </form>
 </template>
