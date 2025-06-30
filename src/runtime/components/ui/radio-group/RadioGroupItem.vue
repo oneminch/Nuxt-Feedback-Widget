@@ -28,7 +28,7 @@ const forwardedProps = useForwardProps(delegatedProps);
     <slot />
     <RadioGroupIndicator
       data-slot="radio-group-indicator"
-      class="absolute inset-0 -z-10 rounded-full border border-lime-500 bg-lime-100 flex items-center justify-center"
+      class="absolute inset-0 -z-10 rounded-full border border-lime-500 bg-lime-200 dark:bg-lime-900 flex items-center justify-center"
     />
   </RadioGroupItem>
 </template>
