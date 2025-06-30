@@ -8,17 +8,17 @@ import type { FeedbackData } from "../../../../types";
 import { generateFeedbackEmailHtml, logger } from "../../../lib/utils";
 import { Resend } from "resend";
 
-const {
-  resendApiKey,
-  resendFrom,
-  resendTo,
-  public: {
-    // @ts-expect-error "Expected"
-    feedbackWidget: { siteName },
-  },
-} = useRuntimeConfig();
-
 export default defineEventHandler(async (event) => {
+  const {
+    resendApiKey,
+    resendFrom,
+    resendTo,
+    public: {
+      // @ts-expect-error "Expected"
+      feedbackWidget: { siteName },
+    },
+  } = useRuntimeConfig();
+
   try {
     // Validate environment variables
     if (!resendApiKey.trim() || !resendFrom.trim() || !resendTo.trim()) {
