@@ -1,6 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import type { FeedbackData } from "../../types";
+import type { FeedbackData, FeedbackFormState } from "../../types";
+import type { RouteLocationNormalizedLoadedGeneric } from "vue-router";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -12,6 +13,43 @@ export const logger = {
   warn: (...args: unknown[]) => console.warn("[Feedback Widget]", ...args),
   log: (...args: unknown[]) => console.log("[Feedback Widget]", ...args),
 };
+
+export const createFormData = (
+  route: RouteLocationNormalizedLoadedGeneric,
+  formState: FeedbackFormState,
+): FeedbackData => {
+  return {
+    metadata: {
+      route: {
+        fullPath: route.fullPath,
+        hash: route.hash,
+        query: route.query,
+        name: route.name,
+        path: route.path,
+        redirectedFrom: route.redirectedFrom,
+      },
+      time: {
+        timestamp: new Date().toISOString(),
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      },
+    },
+    topic: formState.topic,
+    option: formState.option,
+    message: formState.message,
+  } satisfies FeedbackData;
+};
+
+export function formatDateTime(timestamp: string) {
+  return new Date(timestamp).toLocaleString(undefined, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    timeZoneName: "short",
+  });
+}
 
 export function generateFeedbackEmailHtml(
   data: FeedbackData,
@@ -26,7 +64,7 @@ export function generateFeedbackEmailHtml(
   return `
     <div style="font-family: Arial, sans-serif; color: #222;">
       <h2>New Feedback Received</h2>
-      <table style="border: 1px solid #bbb; border-radius: 8px; border-collapse: separate; border-spacing: 0; margin-bottom: 1em; box-shadow: 0 2px 8px #0001;">
+      <table style="border: 1px solid #bbb; border-radius: 8px; border-collapse: separate; border-spacing: 0; margin-bottom: 1em; box-shadow: 0 2px 8px #0001; overflow: hidden;">
         <tbody>
           <tr>
             <td style="font-weight: bold; padding: 8px 12px; border-bottom: 1px solid #eee; border-right: 1px solid #eee; background: #f8fafc;">Topic:</td>
@@ -53,7 +91,9 @@ export function generateFeedbackEmailHtml(
           </tr>
           <tr>
             <td style="font-weight: bold; padding: 8px 12px; background: #f8fafc; border-right: 1px solid #eee;">Timestamp:</td>
-            <td style="padding: 8px 12px;">${time.timestamp} (${time.timezone})</td>
+            <td style="padding: 8px 12px;">
+              ${formatDateTime(time.timestamp)} (${time.timezone})
+            </td>
           </tr>
         </tbody>
       </table>
@@ -85,7 +125,7 @@ export function generateFeedbackGitHubIssueMarkdown(
 | **Topic**          | ${topic || "N/A"} |
 | **Option**         | ${option} |
 | **Message**        | ${message ? message.replace(/\n/g, "<br>") : "N/A"} |
-| **Timestamp**      | ${time.timestamp} (${time.timezone}) |
+| **Timestamp**      | ${formatDateTime(time.timestamp)} (${time.timezone}) |
 
 ### Metadata: Route Information
 

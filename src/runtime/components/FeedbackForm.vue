@@ -13,8 +13,10 @@ import {
 } from "./ui/select";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import FormValidationMessage from "./FormValidationMessage.vue";
-import type { FeedbackUIProps, FeedbackData } from "../../types";
+import type { FeedbackUIProps, FeedbackFormState } from "../../types";
 import { feedbackOptions } from "../lib/defaults";
+import Emoji from "./icons/Emoji.vue";
+import { createFormData } from "../lib/utils";
 
 const formProps =
   defineProps<Pick<FeedbackUIProps, "submitLabel" | "withTopics" | "topics">>();
@@ -25,51 +27,34 @@ const formEmits = defineEmits<{
 
 const route = useRoute();
 
-const feedbackTopic = ref("");
-const feedbackOption = ref("");
-const feedbackMessage = ref("");
-
-const errors = ref<{ topic?: string; option?: string }>({});
+const formState = ref<FeedbackFormState>({
+  topic: "",
+  option: "",
+  message: "",
+});
+const errors = ref<Partial<FeedbackFormState>>({});
 const isSubmitting = ref(false);
+
+const resetErrors = () => (errors.value = {});
 
 const validate = () => {
   errors.value = {};
 
-  if (formProps.withTopics && !feedbackTopic.value.trim()) {
+  if (formProps.withTopics && !formState.value.topic.trim()) {
     errors.value.topic = "Please select a topic.";
   }
 
-  if (!feedbackOption.value.trim()) {
+  if (!formState.value.option.trim()) {
     errors.value.option = "Please select an option.";
   }
 
   return Object.keys(errors.value).length === 0;
 };
 
-const resetErrors = () => (errors.value = {});
-
 const submitFeedback = async () => {
   if (!validate()) return;
 
-  const feedbackData = {
-    metadata: {
-      route: {
-        fullPath: route.fullPath,
-        hash: route.hash,
-        query: route.query,
-        name: route.name,
-        path: route.path,
-        redirectedFrom: route.redirectedFrom,
-      },
-      time: {
-        timestamp: new Date().toISOString(),
-        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      },
-    },
-    topic: feedbackTopic.value,
-    option: feedbackOption.value,
-    message: feedbackMessage.value,
-  } satisfies FeedbackData;
+  const feedbackData = createFormData(route, formState.value);
 
   isSubmitting.value = true;
 
@@ -83,8 +68,10 @@ const submitFeedback = async () => {
       throw createError(res.message);
     }
 
+    // Emit success event with message
     formEmits("postSubmit", "success", res.message);
   } catch (error) {
+    // Emit failure event with error message
     formEmits(
       "postSubmit",
       "failure",
@@ -93,11 +80,15 @@ const submitFeedback = async () => {
         : "Unknown error. Please try again later.",
     );
   } finally {
-    feedbackOption.value = "";
-    feedbackMessage.value = "";
-    feedbackTopic.value = "";
+    // Reset form state after submission
+    formState.value.option = "";
+    formState.value.message = "";
+    formState.value.topic = "";
+
+    // Reset errors
     resetErrors();
 
+    // Reset submitting state
     isSubmitting.value = false;
   }
 };
@@ -105,7 +96,7 @@ const submitFeedback = async () => {
 
 <template>
   <form @submit.prevent="submitFeedback" @change="resetErrors">
-    <Select v-if="withTopics" v-model="feedbackTopic">
+    <Select v-if="withTopics" v-model="formState.topic">
       <SelectTrigger class="w-full">
         <SelectValue placeholder="Select a topic" />
       </SelectTrigger>
@@ -121,19 +112,19 @@ const submitFeedback = async () => {
     <FormValidationMessage v-if="withTopics" :error-message="errors.topic" />
 
     <RadioGroup
-      v-model="feedbackOption"
-      class="flex items-center justify-evenly gap-4 border border-primary-200 p-4 rounded-md"
+      v-model="formState.option"
+      class="flex items-center justify-evenly gap-4 border border-border bg-muted/50 dark:bg-transparent p-4 rounded-md"
       name="Feedback Option"
     >
       <RadioGroupItem
-        v-for="option in feedbackOptions"
-        :id="option.id"
-        :key="option.id"
-        :value="option.value"
-        :aria-label="option.label"
+        v-for="[id, value] in feedbackOptions"
+        :id="id"
+        :key="id"
+        :value="value"
+        :aria-label="value"
       >
         <span class="-z-0">
-          <component :is="option.icon" />
+          <Emoji :type="id" />
         </span>
       </RadioGroupItem>
     </RadioGroup>
@@ -146,7 +137,7 @@ const submitFeedback = async () => {
       >
       <Textarea
         id="message"
-        v-model="feedbackMessage"
+        v-model="formState.message"
         class="h-24 resize-y max-h-48"
         name="message"
         placeholder="Optional Message..."
