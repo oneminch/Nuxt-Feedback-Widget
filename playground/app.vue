@@ -10,14 +10,17 @@ const toggleColorMode = () => {
 
 <template>
   <div class="w-5/6 h-full absolute inset-0 mx-auto flex flex-col">
-    <header>
+    <header class="flex items-center justify-between">
       <hgroup class="flex items-center gap-6 p-4">
         <nuxt-link to="/">Home</nuxt-link>
         <nuxt-link to="/about">About</nuxt-link>
       </hgroup>
 
-      <button class="absolute top-4 right-0" @click="toggleColorMode">
-        🌓
+      <button
+        class="text-sm bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 flex items-center justify-center size-8 rounded-lg cursor-pointer leading-0.5"
+        @click="toggleColorMode"
+      >
+        🔆
       </button>
     </header>
 
