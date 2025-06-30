@@ -1,22 +1,96 @@
 import {
+  createError,
   defineEventHandler,
-  readBody /* , useRuntimeConfig */,
+  readBody,
+  useRuntimeConfig,
 } from "#imports";
+import {
+  generateFeedbackGitHubIssueMarkdown,
+  logger,
+} from "../../../lib/utils";
 import type { FeedbackData } from "../../../../types";
 
 export default defineEventHandler(async (event) => {
-  try {
-    const body = await readBody<FeedbackData>(event);
-    console.log("Feedback submitted to github", body);
+  const {
+    githubToken,
+    githubRepo,
+    githubOwner,
+    public: {
+      // @ts-expect-error "Expected"
+      feedbackWidget: { siteName },
+    },
+  } = useRuntimeConfig();
 
-    // throw new Error("Feedback Submission Failed");
+  try {
+    // Validate environment variables
+    if (!githubToken?.trim() || !githubRepo?.trim() || !githubOwner?.trim()) {
+      console.error(
+        "Missing GitHub environment variables for feedback widget.",
+      );
+      throw createError({
+        statusCode: 500,
+        message:
+          "A server configuration error occurred. Please try again later.",
+      });
+    }
+
+    // Read and validate request body
+    const body = await readBody<FeedbackData>(event);
+
+    if (!body.option?.trim()) {
+      throw createError({
+        statusCode: 400,
+        message: "Please select a feedback option.",
+      });
+    }
+
+    // Prepare GitHub issue data
+    const issueTitle = `[Feedback] ${siteName}`;
+    const issueBody = generateFeedbackGitHubIssueMarkdown(body);
+
+    // Submit issue to GitHub
+    const response = await fetch(
+      `https://api.github.com/repos/${githubOwner}/${githubRepo}/issues`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${githubToken}`,
+          Accept: "application/vnd.github+json",
+          "Content-Type": "application/json",
+          "X-GitHub-Api-Version": "2022-11-28",
+        },
+        body: JSON.stringify({
+          title: issueTitle,
+          body: issueBody,
+          labels: ["feedback", ...(body.option ? [body.option] : [])],
+        }),
+      },
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      logger.error("GitHub API error:", errorData);
+
+      throw createError({
+        statusCode: 500,
+        message: "A server error occurred while submitting feedback.",
+      });
+    }
 
     return {
-      status: 200,
-      message: "Feedback Successfully Submitted",
+      status: "success",
+      message: "Thank you for your feedback!",
     };
   } catch (error) {
-    // console.log(error);
-    return error;
+    logger.error("Feedback submission error:", error);
+
+    return {
+      error: true,
+      status: "failure",
+      message:
+        error instanceof Error
+          ? error.message
+          : "An unknown error occurred. Please try again later.",
+    };
   }
 });
