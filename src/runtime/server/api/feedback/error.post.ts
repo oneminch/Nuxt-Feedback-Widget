@@ -2,7 +2,7 @@ import { defineEventHandler } from "#imports";
 import { logger } from "../../../lib/utils";
 
 export default defineEventHandler(() => {
-  logger.error("Missing email environment variables for feedback widget.");
+  logger.error("Missing feedback method for widget.");
 
   return {
     error: true,

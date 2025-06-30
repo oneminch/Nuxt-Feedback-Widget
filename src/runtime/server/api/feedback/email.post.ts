@@ -69,8 +69,6 @@ export default defineEventHandler(async (event) => {
       message: "Thank you for your feedback!",
     };
   } catch (error) {
-    logger.error("Feedback submission error:", error);
-
     return {
       error: true,
       status: "failure",

@@ -23,10 +23,9 @@ export default defineEventHandler(async (event) => {
 
   try {
     // Validate environment variables
-    if (!githubToken?.trim() || !githubRepo?.trim() || !githubOwner?.trim()) {
-      console.error(
-        "Missing GitHub environment variables for feedback widget.",
-      );
+    if (!githubToken.trim() || !githubRepo.trim() || !githubOwner.trim()) {
+      logger.error("Missing GitHub environment variables for feedback widget.");
+
       throw createError({
         statusCode: 500,
         message:
@@ -37,7 +36,7 @@ export default defineEventHandler(async (event) => {
     // Read and validate request body
     const body = await readBody<FeedbackData>(event);
 
-    if (!body.option?.trim()) {
+    if (!body.option.trim()) {
       throw createError({
         statusCode: 400,
         message: "Please select a feedback option.",
@@ -49,41 +48,36 @@ export default defineEventHandler(async (event) => {
     const issueBody = generateFeedbackGitHubIssueMarkdown(body);
 
     // Submit issue to GitHub
-    const response = await fetch(
+    await $fetch(
       `https://api.github.com/repos/${githubOwner}/${githubRepo}/issues`,
       {
         method: "POST",
         headers: {
           Authorization: `Bearer ${githubToken}`,
           Accept: "application/vnd.github+json",
-          "Content-Type": "application/json",
           "X-GitHub-Api-Version": "2022-11-28",
         },
-        body: JSON.stringify({
+        body: {
           title: issueTitle,
           body: issueBody,
           labels: ["feedback", ...(body.option ? [body.option] : [])],
-        }),
+        },
+        onResponseError: () => {
+          logger.error("GitHub API Error");
+
+          throw createError({
+            statusCode: 500,
+            message: "A server error occurred while submitting feedback.",
+          });
+        },
       },
     );
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      logger.error("GitHub API error:", errorData);
-
-      throw createError({
-        statusCode: 500,
-        message: "A server error occurred while submitting feedback.",
-      });
-    }
 
     return {
       status: "success",
       message: "Thank you for your feedback!",
     };
   } catch (error) {
-    logger.error("Feedback submission error:", error);
-
     return {
       error: true,
       status: "failure",

@@ -74,32 +74,29 @@ const submitFeedback = async () => {
   } satisfies FeedbackData;
 
   try {
-    const res = await fetch("/api/submit-feedback", {
+    const res = await $fetch("/api/submit-feedback", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(feedbackData),
+      body: feedbackData,
     });
 
-    const resData = await res.json();
-
-    if (resData.error) {
-      throw createError(resData.message);
+    if (res.error) {
+      throw createError(res.message);
     }
 
-    submissionResponseMessage.value = resData.message;
+    submissionResponseMessage.value = res.message;
 
     feedbackOption.value = "";
     feedbackMessage.value = "";
     feedbackTopic.value = "";
 
-    formEmits("postSubmit", "success", resData.message);
+    formEmits("postSubmit", "success", res.message);
   } catch (error) {
     formEmits(
       "postSubmit",
       "failure",
-      error instanceof Error ? error.message : "Unknown error",
+      error instanceof Error
+        ? error.message
+        : "Unknown error. Please try again later.",
     );
   }
 };
