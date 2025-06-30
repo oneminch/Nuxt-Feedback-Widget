@@ -12,46 +12,44 @@ import {
   SelectValue,
 } from "./ui/select";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
-import HappyFace from "./icons/HappyFace.vue";
-import SadFace from "./icons/SadFace.vue";
-import NeutralFace from "./icons/NeutralFace.vue";
+import FormValidationMessage from "./FormValidationMessage.vue";
 import type { FeedbackUIProps, FeedbackData } from "../../types";
-import { cn } from "../lib/utils";
+import { feedbackOptions } from "../lib/defaults";
 
-type FeedbackFormProps = Pick<
-  FeedbackUIProps,
-  "submitLabel" | "withTopics" | "topics"
->;
+const formProps =
+  defineProps<Pick<FeedbackUIProps, "submitLabel" | "withTopics" | "topics">>();
 
-const formProps = defineProps<FeedbackFormProps>();
 const formEmits = defineEmits<{
   (e: "postSubmit", status: "success" | "failure", message: string): void;
 }>();
 
 const route = useRoute();
 
-const feedbackOptions = [
-  { id: "unsatisfied", value: "Unsatisfied", label: "Sad", icon: SadFace },
-  { id: "neutral", value: "Neutral", label: "Neutral", icon: NeutralFace },
-  { id: "satisfied", value: "Satisfied", label: "Happy", icon: HappyFace },
-];
-
 const feedbackTopic = ref("");
 const feedbackOption = ref("");
 const feedbackMessage = ref("");
-const validationErrorMessage = ref("");
-const submissionResponseMessage = ref("");
 
-const resetErrorMessage = () => (validationErrorMessage.value = "");
+const errors = ref<{ topic?: string; option?: string }>({});
+const isSubmitting = ref(false);
+
+const validate = () => {
+  errors.value = {};
+
+  if (formProps.withTopics && !feedbackTopic.value.trim()) {
+    errors.value.topic = "Please select a topic.";
+  }
+
+  if (!feedbackOption.value.trim()) {
+    errors.value.option = "Please select an option.";
+  }
+
+  return Object.keys(errors.value).length === 0;
+};
+
+const resetErrors = () => (errors.value = {});
 
 const submitFeedback = async () => {
-  if (
-    !feedbackOption.value.trim() ||
-    (formProps.withTopics && !feedbackTopic.value.trim())
-  ) {
-    validationErrorMessage.value = "Please select a topic and an option.";
-    return;
-  }
+  if (!validate()) return;
 
   const feedbackData = {
     metadata: {
@@ -73,6 +71,8 @@ const submitFeedback = async () => {
     message: feedbackMessage.value,
   } satisfies FeedbackData;
 
+  isSubmitting.value = true;
+
   try {
     const res = await $fetch("/api/submit-feedback", {
       method: "POST",
@@ -83,12 +83,6 @@ const submitFeedback = async () => {
       throw createError(res.message);
     }
 
-    submissionResponseMessage.value = res.message;
-
-    feedbackOption.value = "";
-    feedbackMessage.value = "";
-    feedbackTopic.value = "";
-
     formEmits("postSubmit", "success", res.message);
   } catch (error) {
     formEmits(
@@ -98,14 +92,21 @@ const submitFeedback = async () => {
         ? error.message
         : "Unknown error. Please try again later.",
     );
+  } finally {
+    feedbackOption.value = "";
+    feedbackMessage.value = "";
+    feedbackTopic.value = "";
+    resetErrors();
+
+    isSubmitting.value = false;
   }
 };
 </script>
 
 <template>
-  <form @submit.prevent="submitFeedback" @change="resetErrorMessage">
+  <form @submit.prevent="submitFeedback" @change="resetErrors">
     <Select v-if="withTopics" v-model="feedbackTopic">
-      <SelectTrigger class="w-full mb-2.5">
+      <SelectTrigger class="w-full">
         <SelectValue placeholder="Select a topic" />
       </SelectTrigger>
       <SelectContent>
@@ -117,9 +118,11 @@ const submitFeedback = async () => {
       </SelectContent>
     </Select>
 
+    <FormValidationMessage v-if="withTopics" :error-message="errors.topic" />
+
     <RadioGroup
       v-model="feedbackOption"
-      class="flex items-center justify-evenly gap-4 border border-primary-200 p-4 mb-1 rounded-md"
+      class="flex items-center justify-evenly gap-4 border border-primary-200 p-4 rounded-md"
       name="Feedback Option"
     >
       <RadioGroupItem
@@ -135,21 +138,7 @@ const submitFeedback = async () => {
       </RadioGroupItem>
     </RadioGroup>
 
-    <p
-      :class="
-        cn(
-          'text-xs mt-1 mb-2.5 h-4 transition-all duration-150 translate-y-0.25 opacity-0 invisible',
-          {
-            'translate-y-0 opacity-100 visible':
-              validationErrorMessage || submissionResponseMessage,
-          },
-          { 'text-rose-500': validationErrorMessage },
-          { 'text-green-500': submissionResponseMessage },
-        )
-      "
-    >
-      {{ validationErrorMessage || submissionResponseMessage }}
-    </p>
+    <FormValidationMessage :error-message="errors.option" />
 
     <div class="mb-5">
       <Label class="mb-1.5 text-base font-semibold" for="message"
@@ -164,6 +153,12 @@ const submitFeedback = async () => {
       />
     </div>
 
-    <Button class="w-full">{{ submitLabel }}</Button>
+    <Button
+      class="w-full"
+      :disabled="isSubmitting"
+      :aria-disabled="isSubmitting"
+    >
+      {{ isSubmitting ? "Submitting..." : submitLabel }}
+    </Button>
   </form>
 </template>
