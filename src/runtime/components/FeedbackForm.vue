@@ -117,28 +117,26 @@ const submitFeedback = async () => {
 
     <FormValidationMessage v-if="withTopics" :error-message="errors.topic" />
 
-    <RadioGroup
-      v-model="formState.option"
-      class="flex items-center justify-evenly gap-4 border border-border bg-muted/50 dark:bg-transparent p-4 rounded-md"
-      name="Feedback Option"
-    >
-      <template v-for="[id, value] in feedbackOptions" :key="id">
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger as-child>
-              <RadioGroupItem :id="id" :value="value" :aria-label="value">
-                <span class="-z-0">
-                  <Emoji :type="id" />
-                </span>
-              </RadioGroupItem>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>{{ value }}</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      </template>
-    </RadioGroup>
+    <TooltipProvider>
+      <RadioGroup
+        v-model="formState.option"
+        class="flex items-center justify-evenly gap-4 border border-border bg-muted/50 dark:bg-transparent p-4 rounded-md"
+        name="Feedback Option"
+      >
+        <Tooltip v-for="[id, value] in feedbackOptions" :key="id">
+          <TooltipTrigger as-child>
+            <RadioGroupItem :value="value" :aria-label="value">
+              <span class="-z-0">
+                <Emoji :type="id" />
+              </span>
+            </RadioGroupItem>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>{{ value }}</p>
+          </TooltipContent>
+        </Tooltip>
+      </RadioGroup>
+    </TooltipProvider>
 
     <FormValidationMessage :error-message="errors.option" />
 
