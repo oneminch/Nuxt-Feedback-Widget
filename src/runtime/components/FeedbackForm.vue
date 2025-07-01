@@ -11,6 +11,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./ui/tooltip";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import FormValidationMessage from "./FormValidationMessage.vue";
 import type { FeedbackUIProps, FeedbackFormState } from "../../types";
@@ -116,17 +122,22 @@ const submitFeedback = async () => {
       class="flex items-center justify-evenly gap-4 border border-border bg-muted/50 dark:bg-transparent p-4 rounded-md"
       name="Feedback Option"
     >
-      <RadioGroupItem
-        v-for="[id, value] in feedbackOptions"
-        :id="id"
-        :key="id"
-        :value="value"
-        :aria-label="value"
-      >
-        <span class="-z-0">
-          <Emoji :type="id" />
-        </span>
-      </RadioGroupItem>
+      <template v-for="[id, value] in feedbackOptions" :key="id">
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger as-child>
+              <RadioGroupItem :id="id" :value="value" :aria-label="value">
+                <span class="-z-0">
+                  <Emoji :type="id" />
+                </span>
+              </RadioGroupItem>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{{ value }}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </template>
     </RadioGroup>
 
     <FormValidationMessage :error-message="errors.option" />
