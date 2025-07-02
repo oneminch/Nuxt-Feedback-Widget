@@ -1,4 +1,4 @@
-export const feedbackOptions = [
+export const defaultOptions = [
   ["love-it", "Love it!"],
   ["its-okay", "It's okay."],
   ["not-great", "Not great."],

@@ -4,7 +4,7 @@ import type {
   RouteRecordNameGeneric,
   RouteLocationGeneric,
 } from "vue-router";
-import type { feedbackOptions } from "../runtime/lib/defaults";
+import type { defaultOptions } from "../runtime/lib/defaults";
 
 export interface FeedbackUIProps {
   title?: string;
@@ -16,7 +16,7 @@ export interface FeedbackUIProps {
   topics?: string[];
 }
 
-export type FeedbackOption = (typeof feedbackOptions)[number];
+export type FeedbackOption = (typeof defaultOptions)[number];
 
 export interface FeedbackFormState {
   topic: string;

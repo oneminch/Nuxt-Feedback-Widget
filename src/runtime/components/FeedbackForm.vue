@@ -20,7 +20,7 @@ import {
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import FormValidationMessage from "./FormValidationMessage.vue";
 import type { FeedbackUIProps, FeedbackFormState } from "../../types";
-import { feedbackOptions } from "../lib/defaults";
+import { defaultOptions } from "../lib/defaults";
 import Emoji from "./icons/Emoji.vue";
 import { createFormData } from "../lib/utils";
 
@@ -28,7 +28,7 @@ const formProps =
   defineProps<Pick<FeedbackUIProps, "submitLabel" | "withTopics" | "topics">>();
 
 const formEmits = defineEmits<{
-  (e: "postSubmit", status: "success" | "failure", message: string): void;
+  (e: "after-submit", status: "success" | "failure", message: string): void;
 }>();
 
 const route = useRoute();
@@ -75,11 +75,11 @@ const submitFeedback = async () => {
     }
 
     // Emit success event with message
-    formEmits("postSubmit", "success", res.message);
+    formEmits("after-submit", "success", res.message);
   } catch (error) {
     // Emit failure event with error message
     formEmits(
-      "postSubmit",
+      "after-submit",
       "failure",
       error instanceof Error
         ? error.message
@@ -123,7 +123,7 @@ const submitFeedback = async () => {
         class="flex items-center justify-evenly gap-4 border border-border bg-muted/50 dark:bg-transparent p-4 rounded-md"
         name="Feedback Option"
       >
-        <Tooltip v-for="[id, value] in feedbackOptions" :key="id">
+        <Tooltip v-for="[id, value] in defaultOptions" :key="id">
           <TooltipTrigger as-child>
             <RadioGroupItem :value="value" :aria-label="value">
               <span class="-z-0">

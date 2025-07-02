@@ -25,10 +25,10 @@ import type { FeedbackUIProps, SubmissionStatus } from "../../types";
 import FeedbackStatus from "./FeedbackStatus.vue";
 import { useMediaQuery } from "@vueuse/core";
 
-const uiProps = withDefaults(defineProps<FeedbackUIProps>(), {
+withDefaults(defineProps<FeedbackUIProps>(), {
   title: "Feedback",
   description: "Tell us what you think.",
-  triggerLabel: "😊",
+  triggerLabel: "Share Feedback",
   triggerClass: "",
   submitLabel: "Submit",
   withTopics: true,
@@ -37,13 +37,14 @@ const uiProps = withDefaults(defineProps<FeedbackUIProps>(), {
 
 const { isOpen } = useFeedbackWidget();
 const isDesktop = useMediaQuery("(min-width: 640px)");
+
 const isFeedbackSubmitted = ref(false);
 const submissionStatus = ref({
   status: "" as SubmissionStatus,
   message: "",
 });
 
-const handlePostSubmit = (status: "success" | "failure", message: string) => {
+const handleAfterSubmit = (status: "success" | "failure", message: string) => {
   isFeedbackSubmitted.value = true;
   submissionStatus.value = { status, message };
 };
@@ -69,11 +70,9 @@ watch(isOpen, (newValue: boolean) => {
   <component :is="Modal.Root" v-model:open="isOpen">
     <component :is="Modal.Trigger" as-child>
       <Button
-        :class="
-          cn('inline-flex items-center justify-center', uiProps.triggerClass)
-        "
+        :class="cn('inline-flex items-center justify-center', triggerClass)"
       >
-        {{ uiProps.triggerLabel }}
+        {{ triggerLabel }}
       </Button>
     </component>
     <component
@@ -82,17 +81,17 @@ watch(isOpen, (newValue: boolean) => {
     >
       <template v-if="!isFeedbackSubmitted">
         <component :is="Modal.Header">
-          <component :is="Modal.Title">{{ uiProps.title }}</component>
+          <component :is="Modal.Title">{{ title }}</component>
           <component :is="Modal.Description">
-            {{ uiProps.description }}
+            {{ description }}
           </component>
         </component>
 
         <FeedbackForm
-          :submit-label="uiProps.submitLabel"
-          :with-topics="uiProps.withTopics"
-          :topics="uiProps.topics"
-          @post-submit="handlePostSubmit"
+          :submit-label="submitLabel"
+          :with-topics="withTopics"
+          :topics="topics"
+          @after-submit="handleAfterSubmit"
         />
       </template>
 

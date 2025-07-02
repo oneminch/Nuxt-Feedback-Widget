@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
     JSON.stringify(body, null, 2),
   );
 
-  throw createError(
-    "Custom feedback endpoint is not implemented yet. Please check back later.",
-  );
+  // throw createError(
+  //   "Custom feedback endpoint is not implemented yet. Please check back later.",
+  // );
 });
