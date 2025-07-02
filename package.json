@@ -1,6 +1,6 @@
 {
-  "name": "nuxt-feedback-module",
-  "version": "1.0.0",
+  "name": "nuxt-feedback-widget",
+  "version": "0.5.0",
   "description": "Easily integrate a feedback widget into your Nuxt app.",
   "repository": "oneminch/nuxt-feedback-widget",
   "license": "MIT",

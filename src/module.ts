@@ -22,7 +22,9 @@ export default defineNuxtModule<ModuleOptions>({
     name: "nuxt-feedback-widget",
     configKey: "feedbackWidget",
   },
-  defaults: {},
+  defaults: {
+    siteName: "Your Nuxt App",
+  },
   async setup(options, nuxt) {
     const resolver = createResolver(import.meta.url);
     const logger = useLogger("feedback-widget");
@@ -76,7 +78,7 @@ export default defineNuxtModule<ModuleOptions>({
     nuxt.options.runtimeConfig.public.feedbackWidget = defu(
       moduleRuntimeConfig,
       {
-        siteName: options.siteName || "Your Nuxt App",
+        siteName: options.siteName,
         customEndpoint: options.customEndpoint,
       },
     );

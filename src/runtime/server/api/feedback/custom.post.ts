@@ -53,7 +53,7 @@ export default defineEventHandler(async (event) => {
     // Send data to custom endpoint
     await $fetch(customEndpoint, {
       method: "POST",
-      body: { data: body, siteName },
+      body: { ...body, siteName },
       onResponseError: () => {
         logger.error("Custom API Endpoint Error");
 
