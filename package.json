@@ -4,7 +4,18 @@
   "description": "Easily integrate a feedback widget into your Nuxt app.",
   "repository": "oneminch/nuxt-feedback-widget",
   "license": "MIT",
+  "author": "Dawit (https://github.com/oneminch/)",
   "type": "module",
+  "keywords": [
+    "nuxt",
+    "feedback",
+    "nuxt-module",
+    "feedback-widget"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
   "exports": {
     ".": {
       "types": "./dist/types.d.mts",
