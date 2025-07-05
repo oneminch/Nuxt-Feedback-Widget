@@ -3,9 +3,9 @@
   "name": "nuxt-feedback-widget-playground",
   "type": "module",
   "scripts": {
-    "dev": "nuxi dev",
-    "build": "nuxi build",
-    "generate": "nuxi generate"
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "generate": "nuxt generate"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.8",

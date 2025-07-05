@@ -46,7 +46,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build module
-        run: pnpm run build
+        run: pnpm run prepack
 
       - name: Build playground
         run: pnpm run build
