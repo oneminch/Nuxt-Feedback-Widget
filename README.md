@@ -228,9 +228,14 @@ function handleButtonClick() {
 
 ```ts
 interface UseFeedbackWidget {
-  isOpen: Ref<boolean>; // Current widget state
+  isOpen: Ref<boolean, boolean>; // Current widget state
   openWidget: () => void; // Open the widget
   closeWidget: () => void; // Close the widget
+
+  // For Internal Use
+  isWidgetMounted: Readonly<Ref<boolean, boolean>>;
+  registerWidget: () => void;
+  unregisterWidget: () => void;
 }
 ```
 
@@ -459,7 +464,7 @@ async function handleTaskComplete() {
 
 - Ensure the module is properly added to your `nuxt.config.ts`
 - Check that you've set a valid `method` in your configuration
-- Verify the component is imported (it should be auto-imported)
+- Verify the component is imported (it should be auto-imported) and added to your app
 
 **Styling conflicts:**
 

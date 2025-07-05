@@ -20,7 +20,14 @@ import {
 import { Button } from "./ui/button";
 import { cn } from "../lib/utils";
 import FeedbackForm from "./FeedbackForm.vue";
-import { computed, ref, useFeedbackWidget, watch } from "#imports";
+import {
+  computed,
+  onMounted,
+  onUnmounted,
+  ref,
+  useFeedbackWidget,
+  watch,
+} from "#imports";
 import type { FeedbackUIProps, SubmissionStatus } from "../../types";
 import FeedbackStatus from "./FeedbackStatus.vue";
 import { useMediaQuery } from "@vueuse/core";
@@ -35,7 +42,7 @@ withDefaults(defineProps<FeedbackUIProps>(), {
   topics: () => ["General Feedback", "Bug Report", "Feature Request"],
 });
 
-const { isOpen } = useFeedbackWidget();
+const { isOpen, registerWidget, unregisterWidget } = useFeedbackWidget();
 const isDesktop = useMediaQuery("(min-width: 640px)");
 
 const isFeedbackSubmitted = ref(false);
@@ -63,6 +70,14 @@ watch(isOpen, (newValue: boolean) => {
     isFeedbackSubmitted.value = false;
     submissionStatus.value = { status: "" as SubmissionStatus, message: "" };
   }
+});
+
+onMounted(() => {
+  registerWidget();
+});
+
+onUnmounted(() => {
+  unregisterWidget();
 });
 </script>
 
