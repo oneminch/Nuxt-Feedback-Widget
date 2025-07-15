@@ -3,13 +3,15 @@ const { openWidget } = useFeedbackWidget();
 </script>
 
 <template>
-  <div class="w-full h-full flex items-center justify-center">
+  <div class="w-full h-full flex items-center justify-center py-10">
     <div
-      class="w-full h-5/6 grid grid-rows-2 md:grid-rows-1 md:grid-cols-5 gap-8 *:border-[0.5px] *:border-neutral-200 *:bg-neutral-50 *:p-10 *:rounded-2xl"
+      class="w-full h-full md:h-5/6 grid grid-rows-2 md:grid-rows-1 md:grid-cols-5 gap-8 *:border-[0.5px] *:border-neutral-200 *:bg-neutral-50 *:p-10 *:rounded-2xl"
     >
       <div
         class="flex flex-col items-center justify-center gap-8 md:col-span-3"
       >
+        <img src="/logo.svg" alt="Widget Logo" class="size-16" />
+
         <h2
           class="text-3xl max-w-4/5 text-neutral-700 font-semibold text-center"
         >
