@@ -125,7 +125,11 @@ const submitFeedback = async () => {
       >
         <Tooltip v-for="[id, value] in defaultOptions" :key="id">
           <TooltipTrigger as-child>
-            <RadioGroupItem :value="value" :aria-label="value">
+            <RadioGroupItem
+              class="aria-checked:border-lime-500 aria-checked:bg-lime-200 dark:aria-checked:bg-lime-900"
+              :value="value"
+              :aria-label="value"
+            >
               <span class="-z-0">
                 <Emoji :type="id" />
               </span>
