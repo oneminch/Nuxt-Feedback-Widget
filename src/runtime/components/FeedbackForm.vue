@@ -20,7 +20,7 @@ import {
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import FormValidationMessage from "./FormValidationMessage.vue";
 import type { FeedbackUIProps, FeedbackFormState } from "../../types";
-import { defaultOptions } from "../lib/defaults";
+import { defaultReactions } from "../lib/defaults";
 import Emoji from "./icons/Emoji.vue";
 import { createFormData } from "../lib/utils";
 
@@ -35,7 +35,7 @@ const route = useRoute();
 
 const formState = ref<FeedbackFormState>({
   topic: "",
-  option: "",
+  reaction: "",
   message: "",
 });
 const errors = ref<Partial<FeedbackFormState>>({});
@@ -50,8 +50,8 @@ const validate = () => {
     errors.value.topic = "Please select a topic.";
   }
 
-  if (!formState.value.option.trim()) {
-    errors.value.option = "Please select an option.";
+  if (!formState.value.reaction.trim()) {
+    errors.value.reaction = "Please select an option.";
   }
 
   return Object.keys(errors.value).length === 0;
@@ -87,7 +87,7 @@ const submitFeedback = async () => {
     );
   } finally {
     // Reset form state after submission
-    formState.value.option = "";
+    formState.value.reaction = "";
     formState.value.message = "";
     formState.value.topic = "";
 
@@ -119,11 +119,11 @@ const submitFeedback = async () => {
 
     <TooltipProvider>
       <RadioGroup
-        v-model="formState.option"
+        v-model="formState.reaction"
         class="flex items-center justify-evenly gap-4 border border-border bg-muted/50 dark:bg-transparent p-4 rounded-md"
-        name="Feedback Option"
+        name="Feedback Reaction"
       >
-        <Tooltip v-for="[id, value] in defaultOptions" :key="id">
+        <Tooltip v-for="[id, value] in defaultReactions" :key="id">
           <TooltipTrigger as-child>
             <RadioGroupItem
               class="aria-checked:border-lime-500 aria-checked:bg-lime-200 dark:aria-checked:bg-lime-900"
@@ -142,7 +142,7 @@ const submitFeedback = async () => {
       </RadioGroup>
     </TooltipProvider>
 
-    <FormValidationMessage :error-message="errors.option" />
+    <FormValidationMessage :error-message="errors.reaction" />
 
     <div class="mb-5">
       <Label class="mb-1.5 text-base font-semibold" for="message"

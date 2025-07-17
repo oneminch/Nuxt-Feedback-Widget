@@ -4,7 +4,7 @@ import type {
   RouteRecordNameGeneric,
   RouteLocationGeneric,
 } from "vue-router";
-import type { defaultOptions } from "../runtime/lib/defaults";
+import type { defaultReactions } from "./runtime/lib/defaults";
 
 export interface FeedbackUIProps {
   title?: string;
@@ -16,17 +16,16 @@ export interface FeedbackUIProps {
   topics?: string[];
 }
 
-export type FeedbackOption = (typeof defaultOptions)[number];
+export type FeedbackOption = (typeof defaultReactions)[number];
 
-export interface FeedbackFormState {
-  topic: string;
-  option: string;
-  message: string;
-}
+export type FeedbackFormState = Pick<
+  FeedbackData,
+  "topic" | "reaction" | "message"
+>;
 
 export interface FeedbackData {
   topic: string;
-  option: string;
+  reaction: string;
   message: string;
   metadata: {
     route: {

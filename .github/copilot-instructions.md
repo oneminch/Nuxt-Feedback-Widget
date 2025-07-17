@@ -44,7 +44,7 @@ npm run dev         # Start playground for testing
 
 ### Adding New Features
 
-1. Update types in `src/types/`
+1. Update types in `src/types.ts`
 2. Implement UI changes in `src/runtime/components/`
 3. Add server handlers in `src/runtime/server/api/feedback/`
 4. Update module options in `src/module.ts` if needed

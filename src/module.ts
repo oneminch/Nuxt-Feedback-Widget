@@ -72,8 +72,8 @@ export default defineNuxtModule<ModuleOptions>({
       });
     }
 
-    const moduleRuntimeConfig = nuxt.options.runtimeConfig.public
-      .feedbackWidget as Partial<ModuleOptions>;
+    const moduleRuntimeConfig =
+      nuxt.options.runtimeConfig.public.feedbackWidget;
 
     nuxt.options.runtimeConfig.public.feedbackWidget = defu(
       moduleRuntimeConfig,
