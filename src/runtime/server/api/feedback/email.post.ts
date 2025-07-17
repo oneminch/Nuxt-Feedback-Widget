@@ -2,6 +2,7 @@ import {
   createError,
   defineEventHandler,
   readBody,
+  setResponseHeaders,
   useRuntimeConfig,
 } from "#imports";
 import type { FeedbackData } from "../../../../types";
@@ -9,12 +10,18 @@ import { generateFeedbackEmailHtml, logger } from "../../../lib/utils";
 import { Resend } from "resend";
 
 export default defineEventHandler(async (event) => {
+  setResponseHeaders(event, {
+    "Content-Security-Policy": "default-src 'none'",
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "DENY",
+    "X-XSS-Protection": "1; mode=block",
+  });
+
   const {
     resendApiKey,
     resendFrom,
     resendTo,
     public: {
-      // @ts-expect-error "Expected"
       feedbackWidget: { siteName },
     },
   } = useRuntimeConfig();
@@ -34,7 +41,7 @@ export default defineEventHandler(async (event) => {
     // Read and validate request body
     const body = await readBody<FeedbackData>(event);
 
-    if (!body.option.trim()) {
+    if (!body.reaction.trim()) {
       throw createError({
         statusCode: 400,
         message: "Please select a feedback option.",

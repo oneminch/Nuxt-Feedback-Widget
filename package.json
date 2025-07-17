@@ -51,6 +51,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "defu": "^6.1.4",
+    "isomorphic-dompurify": "^2.26.0",
     "lucide-vue-next": "^0.511.0",
     "reka-ui": "^2.3.0",
     "resend": "^4.5.1",

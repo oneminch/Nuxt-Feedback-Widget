@@ -2,6 +2,7 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import type { FeedbackData, FeedbackFormState } from "../../types";
 import type { RouteLocationNormalizedLoadedGeneric } from "vue-router";
+import DOMPurify from "isomorphic-dompurify";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -34,7 +35,7 @@ export const createFormData = (
       },
     },
     topic: formState.topic,
-    option: formState.option,
+    reaction: formState.reaction,
     message: formState.message,
   } satisfies FeedbackData;
 };
@@ -51,12 +52,29 @@ export function formatDateTime(timestamp: string) {
   });
 }
 
+export function sanitizeUserInput(input: string, maxLength?: number): string {
+  if (!input.trim()) return "N/A";
+
+  const cleaned = DOMPurify.sanitize(input, {
+    ALLOWED_TAGS: [],
+    ALLOWED_ATTR: [],
+  }).trim();
+
+  const normalized = cleaned.replace(/\s+/g, " ");
+
+  return maxLength ? normalized.slice(0, maxLength) : normalized;
+}
+
 export function generateFeedbackEmailHtml(
   data: FeedbackData,
   options?: { showRawJson?: boolean },
 ): string {
-  const { topic, option, message, metadata } = data;
+  const { topic, reaction, message, metadata } = data;
   const { route, time } = metadata;
+
+  const sanitizedTopic = sanitizeUserInput(topic, 15);
+  const sanitizedReaction = sanitizeUserInput(reaction, 100);
+  const sanitizedMessage = sanitizeUserInput(message, 1000);
 
   const rawJson = JSON.stringify(data, null, 2);
   const showRaw = options?.showRawJson;
@@ -64,19 +82,20 @@ export function generateFeedbackEmailHtml(
   return `
     <div style="font-family: Arial, sans-serif; color: #222;">
       <h2>New Feedback Received</h2>
+
       <table style="border: 1px solid #bbb; border-radius: 8px; border-collapse: separate; border-spacing: 0; margin-bottom: 1em; box-shadow: 0 2px 8px #0001; overflow: hidden;">
         <tbody>
           <tr>
             <td style="font-weight: bold; padding: 8px 12px; border-bottom: 1px solid #eee; border-right: 1px solid #eee; background: #f8fafc;">Topic:</td>
-            <td style="padding: 8px 12px; border-bottom: 1px solid #eee;">${topic || "N/A"}</td>
+            <td style="padding: 8px 12px; border-bottom: 1px solid #eee;">${sanitizedTopic}</td>
           </tr>
           <tr>
-            <td style="font-weight: bold; padding: 8px 12px; border-bottom: 1px solid #eee; border-right: 1px solid #eee; background: #f8fafc;">Option:</td>
-            <td style="padding: 8px 12px; border-bottom: 1px solid #eee;">${option}</td>
+            <td style="font-weight: bold; padding: 8px 12px; border-bottom: 1px solid #eee; border-right: 1px solid #eee; background: #f8fafc;">Reaction:</td>
+            <td style="padding: 8px 12px; border-bottom: 1px solid #eee;">${sanitizedReaction}</td>
           </tr>
           <tr>
             <td style="font-weight: bold; padding: 8px 12px; border-bottom: 1px solid #eee; border-right: 1px solid #eee; background: #f8fafc;">Message:</td>
-            <td style="padding: 8px 12px; border-bottom: 1px solid #eee; white-space: pre-line;">${message || "N/A"}</td>
+            <td style="padding: 8px 12px; border-bottom: 1px solid #eee; white-space: pre-line;">${sanitizedMessage}</td>
           </tr>
           <tr>
             <td style="font-weight: bold; padding: 8px 12px; border-bottom: 1px solid #eee; border-right: 1px solid #eee; background: #f8fafc;">Route:</td>
@@ -112,8 +131,12 @@ export function generateFeedbackEmailHtml(
 export function generateFeedbackGitHubIssueMarkdown(
   data: FeedbackData,
 ): string {
-  const { topic, option, message, metadata } = data;
+  const { topic, reaction, message, metadata } = data;
   const { route, time } = metadata;
+
+  const sanitizedTopic = sanitizeUserInput(topic, 15);
+  const sanitizedReaction = sanitizeUserInput(reaction, 100);
+  const sanitizedMessage = sanitizeUserInput(message, 1000);
 
   const rawJson = JSON.stringify(data, null, 2);
 
@@ -122,9 +145,9 @@ export function generateFeedbackGitHubIssueMarkdown(
 
 | Field              | Value |
 | ------------------ | ----- |
-| **Topic**          | ${topic || "N/A"} |
-| **Option**         | ${option} |
-| **Message**        | ${message ? message.replace(/\n/g, "<br>") : "N/A"} |
+| **Topic**          | ${sanitizedTopic || "N/A"} |
+| **Reaction**         | ${sanitizedReaction} |
+| **Message**        | ${sanitizedMessage} |
 | **Timestamp**      | ${formatDateTime(time.timestamp)} (${time.timezone}) |
 
 ### Metadata: Route Information

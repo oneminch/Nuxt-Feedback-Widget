@@ -2,6 +2,7 @@ import {
   createError,
   defineEventHandler,
   readBody,
+  setResponseHeaders,
   useRuntimeConfig,
 } from "#imports";
 import {
@@ -11,12 +12,18 @@ import {
 import type { FeedbackData } from "../../../../types";
 
 export default defineEventHandler(async (event) => {
+  setResponseHeaders(event, {
+    "Content-Security-Policy": "default-src 'none'",
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "DENY",
+    "X-XSS-Protection": "1; mode=block",
+  });
+
   const {
     githubToken,
     githubRepo,
     githubOwner,
     public: {
-      // @ts-expect-error "Expected"
       feedbackWidget: { siteName },
     },
   } = useRuntimeConfig();
@@ -36,7 +43,7 @@ export default defineEventHandler(async (event) => {
     // Read and validate request body
     const body = await readBody<FeedbackData>(event);
 
-    if (!body.option.trim()) {
+    if (!body.reaction.trim()) {
       throw createError({
         statusCode: 400,
         message: "Please select a feedback option.",
@@ -60,7 +67,7 @@ export default defineEventHandler(async (event) => {
         body: {
           title: issueTitle,
           body: issueBody,
-          labels: ["feedback", ...(body.option ? [body.option] : [])],
+          labels: ["feedback", ...(body.reaction ? [body.reaction] : [])],
         },
         onResponseError: () => {
           logger.error("GitHub API Error");
