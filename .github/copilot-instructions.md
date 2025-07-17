@@ -1,5 +1,7 @@
 # AI Agent Instructions for nuxt-feedback-widget
 
+- Don't rewrite lines of code if there is no difference. I'm only interested in changes only.
+
 ## Project Overview
 
 This is a Nuxt module that provides a customizable feedback widget with multiple submission backends. The widget supports email (via Resend), GitHub Issues, or custom endpoints for feedback collection.
