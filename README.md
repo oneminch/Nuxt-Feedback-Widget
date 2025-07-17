@@ -1,6 +1,8 @@
-# Nuxt Feedback Widget
+![Cover Image](/playground/public/cover.png)
 
 <div align="center">
+
+# Nuxt Feedback Widget
 
 <!-- [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
@@ -9,7 +11,7 @@
 [![Nuxt][nuxt-src]][nuxt-href] -->
 <!-- [![bundle size][bundle-size-src]][bundle-size-href] -->
 
-A module for easily integrating a feedback widget into your Nuxt app.
+A simple & customizable feedback widget for your Nuxt apps.
 
 [📖 Documentation](#table-of-contents) |
 [✨ Release Notes](/CHANGELOG.md) |
@@ -46,7 +48,7 @@ A module for easily integrating a feedback widget into your Nuxt app.
 
 - 💚 Beautiful & accessible UI based on Shadcn-Vue & Tailwind CSS 4
   - Built-in dark mode support with class (.dark)
-- 🔩 Fully customizable `<FeedbackWidget />` component
+- 🔩 Customizable `<FeedbackWidget />` component
 - 📲 Scope feedback to specific features/topics
 - 📧 Multiple submission methods supported:
   - Email (via Resend)
@@ -75,7 +77,9 @@ export default defineNuxtConfig({
 });
 ```
 
-That's it! You can now start using <FeedbackWidget /> in your components.
+Define environment variables for your selected method. [Read more below](#environment-variables).
+
+That's it! You can now start using `<FeedbackWidget />` in your components.
 
 ## Configuration
 
@@ -338,7 +342,7 @@ export default defineNuxtConfig({
 ```ts
 interface FeedbackDataType {
   topic: string; // Selected topic
-  option: string; // Feedback type
+  reaction: string; // Feedback reaction
   message: string; // User's optional message
   siteName: string; // Your configured site name
   metadata: {
@@ -358,13 +362,18 @@ interface FeedbackDataType {
 }
 ```
 
+> **Imporant:** The feedback data is forwarded as is to your custom endpoint. Since user input can't be trusted, you'll need to implement some form of sanitization in your endpoint.
+
 **Example Custom Handler:**
 
 ```ts
 // ~/server/api/my-custom-handler.ts
 export default defineEventHandler(async (event) => {
   try {
-    const feedback = await readBody(event);
+    const rawFeedback = await readBody(event);
+
+    // Sanitize input
+    const feedback = sanitizer(rawFeedback);
 
     // Save to database
     await db.insert(feedback);
