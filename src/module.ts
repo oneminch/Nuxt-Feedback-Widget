@@ -53,22 +53,26 @@ export default defineNuxtModule<ModuleOptions>({
     if (options.method === "email") {
       addServerHandler({
         route: "/api/submit-feedback",
-        handler: resolver.resolve("./runtime/server/api/feedback/email.post"),
+        handler: resolver.resolve("./runtime/server/api/feedback/email"),
+        method: "post",
       });
     } else if (options.method === "github") {
       addServerHandler({
         route: "/api/submit-feedback",
-        handler: resolver.resolve("./runtime/server/api/feedback/github.post"),
+        handler: resolver.resolve("./runtime/server/api/feedback/github"),
+        method: "post",
       });
     } else if (options.method === "custom-endpoint") {
       addServerHandler({
         route: "/api/submit-feedback",
-        handler: resolver.resolve("./runtime/server/api/feedback/custom.post"),
+        handler: resolver.resolve("./runtime/server/api/feedback/custom"),
+        method: "post",
       });
     } else {
       addServerHandler({
         route: "/api/submit-feedback",
-        handler: resolver.resolve("./runtime/server/api/feedback/error.post"),
+        handler: resolver.resolve("./runtime/server/api/feedback/error"),
+        method: "post",
       });
     }
 
