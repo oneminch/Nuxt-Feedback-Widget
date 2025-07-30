@@ -83,6 +83,11 @@ export function generateFeedbackEmailHtml(
     <div style="font-family: Arial, sans-serif; color: #222;">
       <h2>New Feedback Received</h2>
 
+      <div style="background: #fffbeb; border: 1px solid #fbbf24; padding: 12px 16px; margin-bottom: 1.5em; border-radius: 4px; color: #78350f; font-size: 0.95rem;">
+        <strong>⚠️ Safety Notice:</strong>
+        This feedback contains user-submitted content. Be cautious with any links or attachments, and avoid clicking unfamiliar URLs.
+      </div>
+
       <table style="border: 1px solid #bbb; border-radius: 8px; border-collapse: separate; border-spacing: 0; margin-bottom: 1em; box-shadow: 0 2px 8px #0001; overflow: hidden;">
         <tbody>
           <tr>
