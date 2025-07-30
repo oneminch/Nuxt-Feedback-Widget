@@ -3,8 +3,8 @@ import type {
   LocationQuery,
   RouteRecordNameGeneric,
   RouteLocationGeneric,
-} from "vue-router";
-import type { defaultReactions } from "./runtime/lib/defaults";
+} from "#vue-router";
+import type { Reactions } from "#nuxt-feedback/lib/defaults";
 
 export interface FeedbackUIProps {
   title?: string;
@@ -16,7 +16,7 @@ export interface FeedbackUIProps {
   topics?: string[];
 }
 
-export type FeedbackOption = (typeof defaultReactions)[number];
+export type FeedbackOption = Reactions[number];
 
 export type FeedbackFormState = Pick<
   FeedbackData,

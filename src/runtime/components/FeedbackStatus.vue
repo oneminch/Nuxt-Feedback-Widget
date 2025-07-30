@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import SuccessIcon from "./icons/Success.vue";
-import FailureIcon from "./icons/Failure.vue";
+import SuccessIcon from "#nuxt-feedback/components/icons/Success.vue";
+import FailureIcon from "#nuxt-feedback/components/icons/Failure.vue";
 import type { SubmissionStatus } from "../../types";
 
 defineProps<{

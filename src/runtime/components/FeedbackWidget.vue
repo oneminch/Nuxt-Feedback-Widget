@@ -6,7 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "./ui/dialog";
+} from "#nuxt-feedback/components/ui/dialog";
 import {
   Drawer,
   DrawerClose,
@@ -16,10 +16,10 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "./ui/drawer";
-import { Button } from "./ui/button";
-import { cn } from "../lib/utils";
-import FeedbackForm from "./FeedbackForm.vue";
+} from "#nuxt-feedback/components/ui/drawer";
+import { Button } from "#nuxt-feedback/components/ui/button";
+import { cn } from "#nuxt-feedback/lib/utils";
+import FeedbackForm from "#nuxt-feedback/components/FeedbackForm.vue";
 import {
   computed,
   onMounted,
@@ -29,7 +29,7 @@ import {
   watch,
 } from "#imports";
 import type { FeedbackUIProps, SubmissionStatus } from "../../types";
-import FeedbackStatus from "./FeedbackStatus.vue";
+import FeedbackStatus from "#nuxt-feedback/components/FeedbackStatus.vue";
 import { useMediaQuery } from "@vueuse/core";
 
 withDefaults(defineProps<FeedbackUIProps>(), {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from "vue";
 import { SelectLabel, type SelectLabelProps } from "reka-ui";
-import { cn } from "../../../lib/utils";
+import { cn } from "#nuxt-feedback/lib/utils";
 
 const props = defineProps<
   SelectLabelProps & { class?: HTMLAttributes["class"] }

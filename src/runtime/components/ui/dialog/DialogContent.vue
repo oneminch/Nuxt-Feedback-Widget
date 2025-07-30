@@ -10,8 +10,8 @@ import {
   DialogPortal,
   useForwardPropsEmits,
 } from "reka-ui";
-import { cn } from "../../../lib/utils";
-import DialogOverlay from "./DialogOverlay.vue";
+import { cn } from "#nuxt-feedback/lib/utils";
+import DialogOverlay from "#nuxt-feedback/components/ui/dialog/DialogOverlay.vue";
 
 const props = defineProps<
   DialogContentProps & { class?: HTMLAttributes["class"] }

@@ -8,7 +8,7 @@ import {
 import {
   generateFeedbackGitHubIssueMarkdown,
   logger,
-} from "../../../lib/utils";
+} from "#nuxt-feedback/lib/utils";
 import type { FeedbackData } from "../../../../types";
 
 export default defineEventHandler(async (event) => {

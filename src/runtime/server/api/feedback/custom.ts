@@ -5,7 +5,7 @@ import {
   setResponseHeaders,
   useRuntimeConfig,
 } from "#imports";
-import { logger } from "../../../lib/utils";
+import { logger } from "#nuxt-feedback/lib/utils";
 import type { FeedbackData } from "../../../../types";
 
 export default defineEventHandler(async (event) => {

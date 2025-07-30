@@ -3,7 +3,7 @@ import type { RadioGroupItemProps } from "reka-ui";
 import type { HTMLAttributes } from "vue";
 import { reactiveOmit } from "@vueuse/core";
 import { RadioGroupItem, useForwardProps } from "reka-ui";
-import { cn } from "../../../lib/utils";
+import { cn } from "#nuxt-feedback/lib/utils";
 
 const props = defineProps<
   RadioGroupItemProps & { class?: HTMLAttributes["class"] }

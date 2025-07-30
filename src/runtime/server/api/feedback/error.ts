@@ -1,5 +1,5 @@
 import { defineEventHandler, setResponseHeaders } from "#imports";
-import { logger } from "../../../lib/utils";
+import { logger } from "#nuxt-feedback/lib/utils";
 
 export default defineEventHandler((event) => {
   setResponseHeaders(event, {

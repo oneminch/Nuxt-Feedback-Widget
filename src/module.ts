@@ -7,7 +7,9 @@ import {
   useLogger,
   addImports,
 } from "@nuxt/kit";
+// import {} from "#build/";
 import { defu } from "defu";
+import { name, version } from "../package.json";
 
 export interface ModuleOptions {
   method: "email" | "github" | "custom-endpoint";
@@ -19,8 +21,10 @@ export type * from "./types";
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
-    name: "nuxt-feedback-widget",
+    name,
+    version,
     configKey: "feedbackWidget",
+    docs: "https://github.com/oneminch/Nuxt-Feedback-Widget/#readme",
   },
   defaults: {
     siteName: "Your Nuxt App",
@@ -28,6 +32,18 @@ export default defineNuxtModule<ModuleOptions>({
   async setup(options, nuxt) {
     const resolver = createResolver(import.meta.url);
     const logger = useLogger("feedback-widget");
+
+    nuxt.options.alias["#nuxt-feedback"] = resolver.resolve("./runtime");
+
+    // Check nitro.options.static in the nitro:init hook
+
+    // const isSSG = !!nuxt.options.nitro?.prerender || nuxt.options.nitro.static;
+
+    // if (isSSG) {
+    //   logger.warn(
+    //     "[Feedback Widget]: The feedback widget requires a server to work properly.",
+    //   );
+    // }
 
     if (!options.method) {
       logger.warn("[Feedback Widget]: Please Pick a Default Feedback Method.");

@@ -4,3 +4,5 @@ export const defaultReactions = [
   ["not-great", "Not great."],
   ["hate-it", "Hate it!"],
 ] as const;
+
+export type Reactions = typeof defaultReactions;

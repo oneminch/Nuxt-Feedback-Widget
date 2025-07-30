@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { useRoute, ref, createError } from "#imports";
-import { Button } from "./ui/button";
-import { Label } from "./ui/label";
-import { Textarea } from "./ui/textarea";
+import { Button } from "#nuxt-feedback/components/ui/button";
+import { Label } from "#nuxt-feedback/components/ui/label";
+import { Textarea } from "#nuxt-feedback/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -10,19 +10,22 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "./ui/select";
+} from "#nuxt-feedback/components/ui/select";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "./ui/tooltip";
-import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
-import FormValidationMessage from "./FormValidationMessage.vue";
+} from "#nuxt-feedback/components/ui/tooltip";
+import {
+  RadioGroup,
+  RadioGroupItem,
+} from "#nuxt-feedback/components/ui/radio-group";
+import FormValidationMessage from "#nuxt-feedback/components/FormValidationMessage.vue";
 import type { FeedbackUIProps, FeedbackFormState } from "../../types";
-import { defaultReactions } from "../lib/defaults";
-import Emoji from "./icons/Emoji.vue";
-import { createFormData } from "../lib/utils";
+import { defaultReactions } from "#nuxt-feedback/lib/defaults";
+import Emoji from "#nuxt-feedback/components/icons/Emoji.vue";
+import { createFormData } from "#nuxt-feedback/lib/utils";
 
 const formProps =
   defineProps<Pick<FeedbackUIProps, "submitLabel" | "withTopics" | "topics">>();

@@ -1,7 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import type { FeedbackData, FeedbackFormState } from "../../types";
-import type { RouteLocationNormalizedLoadedGeneric } from "vue-router";
+import type { RouteLocationNormalizedLoadedGeneric } from "#vue-router";
 import DOMPurify from "isomorphic-dompurify";
 
 export function cn(...inputs: ClassValue[]) {

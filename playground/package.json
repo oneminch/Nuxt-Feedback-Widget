@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "nuxt-feedback-widget-playground",
+  "name": "nuxt-feedback-playground",
   "type": "module",
   "scripts": {
     "dev": "nuxt dev",

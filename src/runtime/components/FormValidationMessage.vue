@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { cn } from "../lib/utils";
+import { cn } from "#nuxt-feedback/lib/utils";
 
 defineProps<{
   errorMessage?: string;
