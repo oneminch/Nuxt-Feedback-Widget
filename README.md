@@ -4,12 +4,15 @@
 
 # Nuxt Feedback Widget
 
-<!-- [![npm version][npm-version-src]][npm-version-href]
+[![npm version][npm-version-src]][npm-version-href]
+[![License][license-src]][license-href]
+[![Nuxt][nuxt-src]][nuxt-href]
+
+<!--
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
 [![code quality][code-quality-src]][code-quality-href]
-[![License][license-src]][license-href]
-[![Nuxt][nuxt-src]][nuxt-href] -->
-<!-- [![bundle size][bundle-size-src]][bundle-size-href] -->
+[![bundle size][bundle-size-src]][bundle-size-href]
+-->
 
 A simple & customizable feedback widget for your Nuxt apps.
 
@@ -61,14 +64,14 @@ A simple & customizable feedback widget for your Nuxt apps.
 Add the module to your Nuxt application in one command:
 
 ```bash
-npx nuxt module add nuxt-feedback-widget
+npx nuxt module add @minch/nuxt-feedback
 ```
 
-To add manually, install the `nuxt-feedback-widget` package using your package manager of choice and add it to your `nuxt.config.ts`:
+To add manually, install the `@minch/nuxt-feedback` package using your package manager of choice and add it to your `nuxt.config.ts`:
 
 ```ts
 export default defineNuxtConfig({
-  modules: ["nuxt-feedback-widget"],
+  modules: ["@minch/nuxt-feedback"],
 
   feedbackWidget: {
     method: "email", // Required: Choose your submission method
@@ -89,7 +92,7 @@ Configure the module in your `nuxt.config.ts` under the `feedbackWidget` propert
 
 ```ts
 export default defineNuxtConfig({
-  modules: ["nuxt-feedback-widget"],
+  modules: ["@minch/nuxt-feedback"],
 
   feedbackWidget: {
     method: "email", // Required: 'email' | 'github' | 'custom-endpoint'
@@ -268,7 +271,7 @@ You can learn more about Resend from [their docs](https://resend.com/docs)
 ```ts
 // nuxt.config.ts
 export default defineNuxtConfig({
-  modules: ["nuxt-feedback-widget"],
+  modules: ["@minch/nuxt-feedback"],
 
   feedbackWidget: {
     method: "email",
@@ -303,7 +306,7 @@ GITHUB_OWNER=your-username-or-org
 ```ts
 // nuxt.config.ts
 export default defineNuxtConfig({
-  modules: ["nuxt-feedback-widget"],
+  modules: ["@minch/nuxt-feedback"],
 
   feedbackWidget: {
     method: "github",
@@ -327,7 +330,7 @@ Forwards feedback to your own API endpoint for custom processing.
 ```ts
 // nuxt.config.ts
 export default defineNuxtConfig({
-  modules: ["nuxt-feedback-widget"],
+  modules: ["@minch/nuxt-feedback"],
 
   feedbackWidget: {
     method: "custom-endpoint",
@@ -550,11 +553,14 @@ If you encounter issues, check:
 
 <!-- Badges -->
 
-<!-- [npm-version-src]: https://img.shields.io/npm/v/nuxt-feedback-widget/latest.svg?style=flat&colorA=020420&colorB=00DC82
-[npm-version-href]: https://npmjs.com/package/nuxt-feedback-widget
-[npm-downloads-src]: https://img.shields.io/npm/dm/nuxt-feedback-widget.svg?style=flat&colorA=020420&colorB=00DC82
+[npm-version-src]: https://img.shields.io/npm/v/@minch/nuxt-feedback/latest.svg?style=flat&colorA=020420&colorB=00DC82
+[npm-version-href]: https://npmjs.com/package/@minch/nuxt-feedback
+[license-src]: https://img.shields.io/npm/l/@minch/nuxt-feedback.svg?style=flat&colorA=020420&colorB=00DC82
+[license-href]: https://npmjs.com/package/@minch/nuxt-feedback
+[nuxt-src]: https://img.shields.io/badge/Nuxt-020420?logo=nuxt
+[nuxt-href]: https://nuxt.com
+
+<!--
 [npm-downloads-href]: https://npm.chart.dev/nuxt-feedback-widget
-[license-src]: https://img.shields.io/npm/l/nuxt-feedback-widget.svg?style=flat&colorA=020420&colorB=00DC82
-[license-href]: https://npmjs.com/package/nuxt-feedback-widget
-[nuxt-src]: https://img.shields.io/badge/Nuxt-020420?logo=nuxt.js
-[nuxt-href]: https://nuxt.com -->
+[npm-downloads-src]: https://img.shields.io/npm/dm/nuxt-feedback-widget.svg?style=flat&colorA=020420&colorB=00DC82
+-->
