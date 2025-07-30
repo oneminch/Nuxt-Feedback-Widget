@@ -465,6 +465,13 @@ async function handleTaskComplete() {
 </script>
 ```
 
+## Known Issues
+
+A list of issues I have noticed and I'm working on a fix for:
+
+- The widget doesn't currently work on fully static sites such as ones deployed to GitHub Pages as it requires a server for submitting feedback.
+- The `useFeedbackWidget` composable doesn't detect the `<FeedbackWidget />` component properly.
+
 ## Troubleshooting
 
 ### Common Issues
