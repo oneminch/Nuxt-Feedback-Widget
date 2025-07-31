@@ -2,7 +2,6 @@ import {
   createError,
   defineEventHandler,
   readBody,
-  setResponseHeaders,
   useRuntimeConfig,
 } from "#imports";
 import {
@@ -12,13 +11,6 @@ import {
 import type { FeedbackData } from "../../../../types";
 
 export default defineEventHandler(async (event) => {
-  setResponseHeaders(event, {
-    "Content-Security-Policy": "default-src 'none'",
-    "X-Content-Type-Options": "nosniff",
-    "X-Frame-Options": "DENY",
-    "X-XSS-Protection": "1; mode=block",
-  });
-
   const {
     githubToken,
     githubRepo,
