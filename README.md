@@ -59,6 +59,8 @@ A simple & customizable feedback widget for your Nuxt apps.
   - Custom Handler
 - 🌟 Handy composable for controlling widget
 
+I recommend reading the [Known Issues](#known-issues) section before setting up the module.
+
 ## Quick Setup
 
 Add the module to your Nuxt application in one command:
@@ -472,6 +474,7 @@ async function handleTaskComplete() {
 
 A list of issues I have noticed and I'm working on a fix for:
 
+- The module uses Tailwind CSS. It applies Tailwind's CSS reset and exposes utility classes which may cause unexpected styling behavior in your site.
 - The widget doesn't currently work on fully static sites such as ones deployed to GitHub Pages as it requires a server for submitting feedback.
 - The `useFeedbackWidget` composable doesn't detect the `<FeedbackWidget />` component properly.
 
