@@ -7,7 +7,6 @@ import {
   useLogger,
   addImports,
 } from "@nuxt/kit";
-// import {} from "#build/";
 import { defu } from "defu";
 import { name, version } from "../package.json";
 

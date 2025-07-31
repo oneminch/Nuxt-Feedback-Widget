@@ -19,17 +19,11 @@ import {
 } from "#nuxt-feedback/components/ui/drawer";
 import { Button } from "#nuxt-feedback/components/ui/button";
 import { cn } from "#nuxt-feedback/lib/utils";
-import FeedbackForm from "#nuxt-feedback/components/FeedbackForm.vue";
-import {
-  computed,
-  onMounted,
-  onUnmounted,
-  ref,
-  useFeedbackWidget,
-  watch,
-} from "#imports";
+import { computed, onMounted, onUnmounted, ref, watch } from "#imports";
 import type { FeedbackUIProps, SubmissionStatus } from "../../types";
+import FeedbackForm from "#nuxt-feedback/components/FeedbackForm.vue";
 import FeedbackStatus from "#nuxt-feedback/components/FeedbackStatus.vue";
+import useFeedbackWidget from "#nuxt-feedback/composables/useFeedbackWidget";
 import { useMediaQuery } from "@vueuse/core";
 
 withDefaults(defineProps<FeedbackUIProps>(), {
