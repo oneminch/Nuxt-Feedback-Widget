@@ -35,12 +35,12 @@
     "dist"
   ],
   "scripts": {
-    "prepack": "nuxt-module-build build",
+    "build:css": "pnpm dlx @tailwindcss/cli -i ./src/runtime/assets/css/tailwind.css -o ./src/runtime/assets/css/output.css",
+    "prepack": "pnpm build:css && nuxt-module-build build",
     "dev": "nuxt dev playground",
     "dev:build": "nuxt build playground",
     "dev:preview": "nuxt preview playground",
     "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxt prepare playground",
-    "default-release": "pnpm run lint && pnpm run test && pnpm run prepack && changelogen --release && pnpm publish && git push --follow-tags",
     "release": "pnpm run prepack && pnpm publish && git push --follow-tags",
     "lint": "eslint .",
     "test": "vitest run",
@@ -49,7 +49,6 @@
   },
   "dependencies": {
     "@nuxt/kit": "^3.17.7",
-    "@tailwindcss/vite": "^4.1.11",
     "@vueuse/core": "^13.5.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -59,7 +58,6 @@
     "reka-ui": "^2.3.2",
     "resend": "^4.7.0",
     "tailwind-merge": "^3.3.1",
-    "tailwindcss": "^4.1.11",
     "tw-animate-css": "^1.3.5",
     "vaul-vue": "^0.4.1"
   },
@@ -70,10 +68,12 @@
     "@nuxt/module-builder": "^1.0.1",
     "@nuxt/schema": "^3.17.7",
     "@nuxt/test-utils": "^3.19.2",
+    "@tailwindcss/vite": "^4.1.11",
     "@types/node": "latest",
     "changelogen": "^0.6.2",
     "eslint": "^9.31.0",
     "nuxt": "^3.17.7",
+    "tailwindcss": "^4.1.11",
     "typescript": "~5.8.3",
     "vitest": "^3.2.4",
     "vue-tsc": "^2.2.12"
