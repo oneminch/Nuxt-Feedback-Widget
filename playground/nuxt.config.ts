@@ -1,4 +1,4 @@
-import tailwindcss from "@tailwindcss/vite";
+// import tailwindcss from "@tailwindcss/vite";
 
 export default defineNuxtConfig({
   modules: ["../src/module"],
@@ -11,18 +11,18 @@ export default defineNuxtConfig({
 
   compatibilityDate: "2025-05-19",
 
-  css: ["~/assets/css/tailwind.css"],
+  // css: ["~/assets/css/tailwind.css"],
 
-  nitro: {
-    preset: "github-pages",
-  },
+  // nitro: {
+  //   preset: "github-pages",
+  // },
 
-  vite: {
-    plugins: [tailwindcss()],
-    server: {
-      // allowedHosts: [".trycloudflare.com"],
-    },
-  },
+  // vite: {
+  //   plugins: [tailwindcss()],
+  //   server: {
+  //     allowedHosts: [".trycloudflare.com"],
+  //   },
+  // },
 
   runtimeConfig: {
     resendApiKey: process.env.RESEND_API_KEY,
