@@ -41,6 +41,7 @@ A simple & customizable feedback widget for your Nuxt apps.
   - [Different Styling Approaches](#different-styling-approaches)
   - [Topic-specific Feedback](#topic-specific-feedback)
   - [Programmatic Control](#programmatic-control)
+- [Known Issues](#known-issues)
 - [Troubleshooting](#troubleshooting)
   - [Common Issues](#common-issues)
   - [Error Handling](#error-handling)

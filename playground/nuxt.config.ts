@@ -11,19 +11,6 @@ export default defineNuxtConfig({
 
   compatibilityDate: "2025-05-19",
 
-  // css: ["~/assets/css/tailwind.css"],
-
-  // nitro: {
-  //   preset: "github-pages",
-  // },
-
-  // vite: {
-  //   plugins: [tailwindcss()],
-  //   server: {
-  //     allowedHosts: [".trycloudflare.com"],
-  //   },
-  // },
-
   runtimeConfig: {
     resendApiKey: process.env.RESEND_API_KEY,
     resendFrom: process.env.RESEND_FROM_EMAIL,
