@@ -1,6 +1,6 @@
 {
   "name": "@minch/nuxt-feedback",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "Easily integrate a feedback widget into your Nuxt app.",
   "repository": "oneminch/Nuxt-Feedback",
   "homepage": "https://github.com/oneminch/Nuxt-Feedback/#readme",
